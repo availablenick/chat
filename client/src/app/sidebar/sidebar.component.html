@@ -1,0 +1,15 @@
+<div style="font-size: 1.5rem; font-weight: bold; text-align:center;">
+  Connected users
+</div>
+
+<ng-container *ngIf="users.length; then list; else message"></ng-container>
+  <ng-template #list>
+    <ul>
+      <li *ngFor="let user of users">
+          {{ user.name }}
+      </li>
+    </ul>
+  </ng-template>
+  <ng-template #message>
+    <div style="margin-top: 2rem; text-align: center">There are no online users</div>
+  </ng-template>
