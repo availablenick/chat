@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  client:
+    build:
+      context: ./client
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    image: chat_client
+    container_name: chat-client
+    restart: always
+    ports:
+      - "${CLIENT_PORT:-4200}:4200"
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
+
+volumes:
+  client_node_modules:
