@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 interface Message {
   author: string,
@@ -10,12 +10,8 @@ interface Message {
   templateUrl: './message-container.component.html',
   styleUrls: ['./message-container.component.scss']
 })
-export class MessageContainerComponent implements OnInit {
+export class MessageContainerComponent {
   messages: Message[] = [];
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }
