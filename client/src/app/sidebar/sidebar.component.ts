@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from "@angular/router";
+import { SessionService } from '../session.service';
 import { User } from '../user';
 
 @Component({
@@ -9,5 +11,15 @@ import { User } from '../user';
 export class SidebarComponent {
   users: User[] = [];
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private session: SessionService,
+  ) { }
+
+  onClick(): void {
+    this.session.attemptLogout().subscribe(() => {
+      this.session.clear();
+      this.router.navigate(["/enter"]);
+    });
+  }
 }

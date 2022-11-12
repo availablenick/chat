@@ -1,8 +1,7 @@
-<div style="font-size: 1.5rem; font-weight: bold; text-align:center;">
-  Connected users
-</div>
+<div style="padding: 2rem">
+  <h2 style="margin: 0; text-align: center;">Connected users</h2>
 
-<ng-container *ngIf="users.length; then list; else message"></ng-container>
+  <ng-container *ngIf="users.length; then list; else message"></ng-container>
   <ng-template #list>
     <ul>
       <li *ngFor="let user of users">
@@ -11,5 +10,10 @@
     </ul>
   </ng-template>
   <ng-template #message>
-    <div style="margin-top: 2rem; text-align: center">There are no online users</div>
+    <div style="margin-top: 2rem; text-align: center;">There are no online users</div>
   </ng-template>
+</div>
+
+<div style="border-top: 1px solid #000; padding: 2rem; text-align: center;">
+  <button type="button" (click)="onClick()">Leave chat</button>
+</div>

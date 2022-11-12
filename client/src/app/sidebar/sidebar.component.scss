@@ -1,7 +1,9 @@
 :host {
   border-left: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   flex: 1;
-  padding: 2rem;
   overflow: auto;
 
   ul {

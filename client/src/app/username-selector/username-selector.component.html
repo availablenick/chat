@@ -6,6 +6,10 @@
         <input style="flex: 1" name="username" />
         <button style="margin-left: 0.5rem">Join chat</button>
       </div>
+
+      <div style="margin-top: 0.5rem" *ngIf="statusMessage.length > 0">
+        {{ statusMessage }}
+      </div>
     </div>
   </form>
 </div>
