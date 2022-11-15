@@ -1,9 +1,15 @@
-<div style="display: flex; height: 100%">
-  <div class="main">
-    <h1 style="margin: 0">Chat</h1>
-    <app-message-form></app-message-form>
-    <app-message-container></app-message-container>
+<ng-container *ngIf="isLoading; then wait; else page"></ng-container>
+<ng-template #wait>
+  Wait...
+</ng-template>
+<ng-template #page>
+  <div style="display: flex; height: 100%">
+    <div class="main">
+      <h1 style="margin-top: 0">Chat</h1>
+      <app-message-container></app-message-container>
+      <app-message-form></app-message-form>
+    </div>
+  
+    <app-sidebar></app-sidebar>
   </div>
-
-  <app-sidebar></app-sidebar>
-</div>
+</ng-template>

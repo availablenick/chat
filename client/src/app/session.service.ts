@@ -14,23 +14,28 @@ export class SessionService {
 
   constructor(private http: HttpClient) { }
 
-  getUser(): User | null {
-    if (this.user === null) {
-      const username = localStorage.getItem("username");
-      if (username !== null) {
-        return { name: username };
-      }
-    }
+  requestData(): Observable<any> {
+    return this.http.get("http://localhost:5000/api/v1/user-data", {
+      ...this.httpOptions,
+      observe: "response",
+    });
+  }
 
-    return null;
+  getUser(): User | null {
+    return this.user;
+  }
+
+  setUser(user: User | null): void {
+    this.user = user;
   }
 
   hasUser(): boolean {
-    return localStorage.getItem("username") !== null;
+    return this.getUser() !== null;
   }
 
-  clear(): void {
-    localStorage.removeItem("username");
+  clear(): Observable<any> {
+    this.setUser(null);
+    return this.http.post("http://localhost:5000/api/v1/logout", {}, this.httpOptions);
   }
 
   attemptLogin(username: string): Observable<any> {
@@ -40,8 +45,4 @@ export class SessionService {
       this.httpOptions,
     );
   };
-
-  attemptLogout(): Observable<any> {
-    return this.http.post("http://localhost:5000/api/v1/logout", {}, this.httpOptions);
-  }
 }

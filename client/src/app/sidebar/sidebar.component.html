@@ -1,7 +1,7 @@
 <div style="padding: 2rem">
   <h2 style="margin: 0; text-align: center;">Connected users</h2>
 
-  <ng-container *ngIf="users.length; then list; else message"></ng-container>
+  <ng-container *ngIf="users.length > 0; then list; else message"></ng-container>
   <ng-template #list>
     <ul>
       <li *ngFor="let user of users">

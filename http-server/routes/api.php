@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\SessionController;
 
 /*
@@ -17,5 +18,10 @@ use App\Http\Controllers\SessionController;
 
 Route::controller(SessionController::class)->group(function() {
     Route::post("/v1/select-username", "selectName")->name("users.select");
+    Route::get("/v1/user-data", "show")->name("users.show");
     Route::post("/v1/logout", "logout")->name("users.logout");
+});
+
+Route::controller(MessageController::class)->group(function() {
+    Route::post("/v1/messages", "store")->name("messages.store");
 });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { SessionService } from '../session.service';
+import { SessionService } from "../session.service";
 
 @Component({
   selector: 'app-username-selector',
@@ -27,7 +27,7 @@ export class UsernameSelectorComponent implements OnInit {
     const username = (<any>event.target).querySelector("input[name=username]").value;
     this.session.attemptLogin(username).subscribe({
       next: () => {
-        localStorage.setItem("username", username);
+        this.session.setUser({ name: username });
         this.statusMessage = "Joining chat...";
         this.router.navigate(["/chat"]);
       },

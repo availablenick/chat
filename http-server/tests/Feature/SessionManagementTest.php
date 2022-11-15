@@ -77,4 +77,30 @@ class SessionManagementTest extends TestCase
             "username" => "test_username",
         ]);
     }
+
+    public function test_session_data_can_be_retrieved()
+    {
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $session = Session::where("username", "test_username")->first();
+        $response2 = $this
+            ->withCookie("session", $session->session_id)
+            ->get(route("users.show"));
+
+        $response2->assertOk();
+        $response2->assertJson([
+            "user" => [
+                "username" => "test_username",
+            ],
+        ]);
+    }
+
+    public function test_session_data_cannot_be_retrieved_by_unauthenticated_user()
+    {
+        $response = $this->get(route("users.show"));
+
+        $response->assertUnauthorized();
+    }
 }

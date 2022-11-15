@@ -36,6 +36,21 @@ class SessionController extends Controller
         return response()->noContent()->cookie("session", $session_id, Session::LIFETIME);
     }
 
+    public function show(Request $request)
+    {
+        $session_id = $request->cookie("session");
+        $session = Session::where("session_id", $session_id)->first();
+        if ($session === null) {
+            abort(401);
+        }
+
+        return response()->json([
+            "user" => [
+                "username" => $session->username,
+            ],
+        ]);
+    }
+
     public function logout(Request $request)
     {
         $session_id = $request->cookie("session");
