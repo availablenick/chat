@@ -29,6 +29,12 @@ export class EventService {
     }
   }
 
+  disconnect(): void {
+    if (this.socket.connected) {
+      this.socket.disconnect();
+    }
+  }
+
   setUpListeners(): void {
     this.socket.on("message-sent", (message: Message) => {
       this.listeners["message-sent"].forEach((listener) => {
@@ -65,9 +71,5 @@ export class EventService {
 
   sendMessageSentEvent(message: Message): void {
     this.socket.emit("message-sent", message);
-  }
-
-  sendDisconnectEvent(): void {
-    this.socket.disconnect();
   }
 }

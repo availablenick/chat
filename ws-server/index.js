@@ -36,8 +36,9 @@ io.of(/\/main/).on("connection", (socket) => {
   socket.on("user-joined", (user) => {
     users[socket.id] = { username: user.name };
     namespaceNames[user.name] = socket.nsp.name;
-    const data = Object.values(users).map((user) => ({ name: user.username }));
-    socket.nsp.emit("user-joined", data);
+    // const data = Object.values(users).map((user) => ({ name: user.username }));
+    socket.broadcast.emit("user-joined", user);
+    // socket.nsp.emit("user-joined", user);
   });
 
   socket.on("message-sent", (message) => {
@@ -46,9 +47,9 @@ io.of(/\/main/).on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     if (users[socket.id]) {
+      // const data = Object.values(users).map((user) => ({ name: user.username }));
+      socket.nsp.emit("user-left", { name: users[socket.id].username });
       delete users[socket.id];
-      const data = Object.values(users).map((user) => ({ name: user.username }));
-      socket.nsp.emit("user-left", data);
     }
   })
 });

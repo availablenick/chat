@@ -10,7 +10,7 @@ import { User } from '../user';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  users: User[] = [];
+  usernames: Set<string> = new Set();
 
   constructor(
     private router: Router,
@@ -19,23 +19,23 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.eventHandler.addListener("user-joined", (users: User[]) => {
-      this.users = users;
+    this.eventHandler.addListener("user-joined", (user: User) => {
+      this.usernames.add(user.name);
     });
 
-    this.eventHandler.addListener("user-left", (users: User[]) => {
-      this.users = users;
+    this.eventHandler.addListener("user-left", (user: User) => {
+      this.usernames.delete(user.name);
     });
 
     this.session.requestAll().subscribe((response: any) => {
-      this.users = response.body.data.map((user: any) => ({ name: user.username }));
+      response.body.data.forEach((user: any) => { this.usernames.add(user.username) });
     });
   }
 
   onClick(): void {
     this.session.clear().subscribe(() => {
       this.router.navigate(["/enter"]);
-      this.eventHandler.sendDisconnectEvent();
+      this.eventHandler.disconnect();
     });
   }
 }
