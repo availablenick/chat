@@ -13,7 +13,7 @@ export class MessageContainerComponent implements OnInit {
   constructor(private eventHandler: EventService) { }
 
   ngOnInit(): void {
-    this.eventHandler.getSocket().on("message-sent", (message: Message) => {
+    this.eventHandler.addListener("message-sent", (message: Message) => {
       this.messages.push(message);
     });
   }

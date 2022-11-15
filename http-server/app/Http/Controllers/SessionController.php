@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Session;
+use App\Http\Resources\SessionResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -34,6 +35,17 @@ class SessionController extends Controller
         ]);
 
         return response()->noContent()->cookie("session", $session_id, Session::LIFETIME);
+    }
+
+    public function index(Request $request)
+    {
+        $session_id = $request->cookie("session");
+        $session = Session::where("session_id", $session_id)->first();
+        if ($session === null) {
+            abort(401);
+        }
+
+        return SessionResource::collection(Session::active()->get());
     }
 
     public function show(Request $request)

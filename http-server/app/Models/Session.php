@@ -15,4 +15,9 @@ class Session extends Model
         'session_id',
         'username',
     ];
+
+    public function scopeActive($query)
+    {
+        $query->where("created_at", ">", now()->subMinutes(self::LIFETIME)->toDateTimeString());
+    }
 }

@@ -19,12 +19,16 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.eventHandler.getSocket().on("user-joined", (users: User[]) => {
+    this.eventHandler.addListener("user-joined", (users: User[]) => {
       this.users = users;
     });
 
-    this.eventHandler.getSocket().on("user-left", (users: User[]) => {
+    this.eventHandler.addListener("user-left", (users: User[]) => {
       this.users = users;
+    });
+
+    this.session.requestAll().subscribe((response: any) => {
+      this.users = response.body.data.map((user: any) => ({ name: user.username }));
     });
   }
 

@@ -103,4 +103,40 @@ class SessionManagementTest extends TestCase
 
         $response->assertUnauthorized();
     }
+
+    public function test_users_with_active_sessions_can_be_retrieved()
+    {
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $this->travel(Session::LIFETIME)->minutes();
+        $response2 = $this->post(route("users.select"), [
+            "username" => "test_username2",
+        ]);
+        
+        $session = Session::where("username", "test_username2")->first();
+        $response3 = $this
+            ->withCookie("session", $session->session_id)
+            ->get(route("users.index"));
+
+        $response3->assertOk();
+        $response3->assertJson([
+            "data" => [
+                ["username" => "test_username2"],
+            ],
+        ]);
+    }
+
+    public function test_unauthenticated_user_cannot_retrieve_users_with_active_sessions()
+    {
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $session = Session::where("username", "test_username")->first();
+        $response2 = $this->get(route("users.index"));
+
+        $response2->assertUnauthorized();
+    }
 }

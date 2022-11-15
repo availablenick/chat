@@ -21,6 +21,13 @@ export class SessionService {
     });
   }
 
+  requestAll(): Observable<any> {
+    return this.http.get("http://localhost:5000/api/v1/users", {
+      ...this.httpOptions,
+      observe: "response",
+    });
+  }
+
   getUser(): User | null {
     return this.user;
   }

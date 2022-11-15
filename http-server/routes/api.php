@@ -18,6 +18,7 @@ use App\Http\Controllers\SessionController;
 
 Route::controller(SessionController::class)->group(function() {
     Route::post("/v1/select-username", "selectName")->name("users.select");
+    Route::get("/v1/users", "index")->name("users.index");
     Route::get("/v1/user-data", "show")->name("users.show");
     Route::post("/v1/logout", "logout")->name("users.logout");
 });
