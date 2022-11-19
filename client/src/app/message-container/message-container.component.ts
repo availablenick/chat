@@ -9,21 +9,43 @@ import { User } from "../user";
   styleUrls: ['./message-container.component.scss']
 })
 export class MessageContainerComponent implements OnInit {
-  messages: string[] = [];
+  messages: Message[] = [];
 
   constructor(private eventHandler: EventService) { }
 
   ngOnInit(): void {
     this.eventHandler.addListener("message-sent", (message: Message) => {
-      this.messages.push(`${message.author}: ${message.content}`);
+      switch (message.type) {
+        case "text":
+          this.messages.push({
+            author: message.author,
+            content: `${message.author}: ${message.content}`,
+            type: message.type,
+          });
+          break;
+        case "image":
+          this.messages.push({
+            author: message.author,
+            content: message.content,
+            type: message.type,
+          });
+      }
     });
 
     this.eventHandler.addListener("user-joined", (user: User) => {
-      this.messages.push(`${user.name} joined the chat`);
+      this.messages.push({
+        author: user.name,
+        content: `${user.name} joined the chat`,
+        type: "text",
+      });
     });
 
     this.eventHandler.addListener("user-left", (user: User) => {
-      this.messages.push(`${user.name} left the chat`);
+      this.messages.push({
+        author: user.name,
+        content: `${user.name} left the chat`,
+        type: "text",
+      });
     });
   }
 }

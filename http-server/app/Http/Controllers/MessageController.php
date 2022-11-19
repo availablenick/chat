@@ -16,16 +16,35 @@ class MessageController extends Controller
         if ($session === null) {
             abort(401);
         }
-        
+
         $validated = $request->validate([
             "content" => "required",
+            "type" => "required",
         ]);
-        
-        $message = Message::create([
+
+        $data = [
             "author" => $session->username,
-            "content" => $validated["content"],
-        ]);
-        
+            "type" => $validated["type"],
+        ];
+
+        switch ($validated["type"]) {
+            case Message::TEXT_TYPE:
+                $data["content"] = $validated["content"];
+                break;
+            case Message::IMAGE_TYPE:
+                $file = $request->file("content");
+                if (!str_starts_with($file->getMimeType(), "image/")) {
+                    abort(422);
+                }
+
+                $filepath = $file->store("images");
+                $data["content"] = $filepath;
+                break;
+            default:
+                return abort(422);
+        }
+
+        $message = Message::create($data);
         MessageSent::dispatch($message);
         return response()->noContent();
     }

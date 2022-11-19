@@ -1,6 +1,15 @@
-<form style="padding-top: 1rem" (submit)="onSubmit($event)">
+<form style="padding-top: 1rem" (submit)="textFormOnSubmit($event)">
   <div>
     <input style="width: 25rem" name="content" />
+    <button style="margin-left: 0.5rem" aria-label="Send message">
+      Send
+    </button>
+  </div>
+</form>
+
+<form style="margin-left: 1rem; padding-top: 1rem" (submit)="imageFormOnSubmit($event)">
+  <div>
+    <input type="file" style="width: 25rem" name="content" accept="image/*" />
     <button style="margin-left: 0.5rem" aria-label="Send message">
       Send
     </button>

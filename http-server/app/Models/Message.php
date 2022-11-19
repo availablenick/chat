@@ -9,8 +9,12 @@ class Message extends Model
 {
     use HasFactory;
 
+    const TEXT_TYPE = 0;
+    const IMAGE_TYPE = 1;
+
     protected $fillable = [
         'author',
         'content',
+        'type',
     ];
 }

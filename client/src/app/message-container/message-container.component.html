@@ -1,3 +1,8 @@
 <div class="message" *ngFor="let message of messages">
-  {{ message }}
+  <ng-container *ngIf="message.type === 'text'; then text; else image"></ng-container>
+  <ng-template #text>{{ message.content }}</ng-template>
+  <ng-template #image>
+    {{ message.author }}:
+    <img src="{{ message.content }}" />
+  </ng-template>
 </div>
