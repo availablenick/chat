@@ -40,6 +40,15 @@ class MessageController extends Controller
                 $filepath = $file->store("images");
                 $data["content"] = $filepath;
                 break;
+            case Message::VIDEO_TYPE:
+                $file = $request->file("content");
+                if (!str_starts_with($file->getMimeType(), "video/")) {
+                    abort(422);
+                }
+
+                $filepath = $file->store("public/videos");
+                $data["content"] = $filepath;
+                break;
             default:
                 return abort(422);
         }

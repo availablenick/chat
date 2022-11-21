@@ -90,6 +90,55 @@ class MessageManagementTest extends TestCase
         ]);
     }
 
+    public function test_message_of_video_type_can_be_created()
+    {
+        Event::fake();
+        Storage::fake();
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $session = Session::where("username", "test_username")->first();
+        $file = UploadedFile::fake()->create("test_content.mp4");
+        $response2 = $this
+            ->withCookie("session", $session->session_id)
+            ->post(route("messages.store"), [
+                "content" => $file,
+                "type" => Message::VIDEO_TYPE,
+            ]);
+
+        $response2->assertNoContent();
+        $this->assertDatabaseHas("messages", [
+            "type" => Message::VIDEO_TYPE,
+        ]);
+
+        $message = Message::where("type", Message::VIDEO_TYPE)->first();
+        Storage::disk()->assertExists($message->content);
+        Event::assertDispatched(MessageSent::class);
+        Event::assertListening(MessageSent::class, SendMessageNotification::class);
+    }
+
+    public function test_message_of_video_type_cannot_be_created_with_wrong_mime_type()
+    {
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $session = Session::where("username", "test_username")->first();
+        $file = UploadedFile::fake()->createWithContent("test_content.txt", "test_content");
+        $response2 = $this
+            ->withCookie("session", $session->session_id)
+            ->post(route("messages.store"), [
+                "content" => $file,
+                "type" => Message::VIDEO_TYPE,
+            ]);
+
+        $response2->assertUnprocessable();
+        $this->assertDatabaseMissing("messages", [
+            "type" => Message::VIDEO_TYPE,
+        ]);
+    }
+
     public function test_message_cannot_be_created_by_unauthenticated_user()
     {
         $response = $this->post(route("messages.store"), [

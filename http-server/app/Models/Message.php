@@ -11,6 +11,7 @@ class Message extends Model
 
     const TEXT_TYPE = 0;
     const IMAGE_TYPE = 1;
+    const VIDEO_TYPE = 2;
 
     protected $fillable = [
         'author',

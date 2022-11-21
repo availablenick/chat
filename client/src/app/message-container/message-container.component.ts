@@ -29,6 +29,14 @@ export class MessageContainerComponent implements OnInit {
             content: message.content,
             type: message.type,
           });
+          break;
+        case "video":
+          this.messages.push({
+            author: message.author,
+            content: message.content,
+            type: message.type,
+          });
+          break;
       }
     });
 

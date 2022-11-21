@@ -1,8 +1,13 @@
 <div class="message" *ngFor="let message of messages">
-  <ng-container *ngIf="message.type === 'text'; then text; else image"></ng-container>
-  <ng-template #text>{{ message.content }}</ng-template>
-  <ng-template #image>
-    {{ message.author }}:
-    <img src="{{ message.content }}" />
-  </ng-template>
+  <ng-container [ngSwitch]="message.type">
+    <ng-container *ngSwitchCase="'text'">{{ message.content }}</ng-container>
+    <ng-container *ngSwitchCase="'image'">
+      {{ message.author }}:
+      <img src="{{ message.content }}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'video'">
+      {{ message.author }}:
+      <video src="{{ message.content }}" controls></video>
+    </ng-container>
+  </ng-container>
 </div>

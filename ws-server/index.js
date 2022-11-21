@@ -28,6 +28,9 @@ app.post("/messages", (req, res) => {
       const file = req.files.content;
       content = `data:${file.mimetype};base64,${file.data.toString("base64")}`;
       break;
+    case "video":
+      content = req.body.content;
+      break;
     default:
       return res.status(400).end();
   }
