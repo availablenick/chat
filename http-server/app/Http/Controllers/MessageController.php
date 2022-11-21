@@ -37,7 +37,7 @@ class MessageController extends Controller
                     abort(422);
                 }
 
-                $filepath = $file->store("images");
+                $filepath = $file->store("public/images");
                 $data["content"] = $filepath;
                 break;
             case Message::VIDEO_TYPE:

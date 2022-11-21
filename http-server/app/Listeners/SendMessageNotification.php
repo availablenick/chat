@@ -37,11 +37,12 @@ class SendMessageNotification
                 ]);
                 break;
             case Message::IMAGE_TYPE:
-                Http::attach("content", fopen(storage_path("app/" . $event->message->content), "r"))
-                    ->post("http://ws-server:3000/messages", [
-                        "author" => $event->message->author,
-                        "type" => "image",
-                    ]);
+                $content = str_replace("public/", "", $event->message->content);
+                Http::post("http://ws-server:3000/messages", [
+                    "author" => $event->message->author,
+                    "content" => asset("storage/" . $content),
+                    "type" => "image",
+                ]);
                 break;
             case Message::VIDEO_TYPE:
                 $content = str_replace("public/", "", $event->message->content);
