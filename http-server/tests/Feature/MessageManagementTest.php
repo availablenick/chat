@@ -76,7 +76,7 @@ class MessageManagementTest extends TestCase
         ]);
 
         $session = Session::where("username", "test_username")->first();
-        $file = UploadedFile::fake()->createWithContent("test_content.txt", "test_content");
+        $file = UploadedFile::fake()->create("test_content.txt");
         $response2 = $this
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
@@ -125,7 +125,7 @@ class MessageManagementTest extends TestCase
         ]);
 
         $session = Session::where("username", "test_username")->first();
-        $file = UploadedFile::fake()->createWithContent("test_content.txt", "test_content");
+        $file = UploadedFile::fake()->create("test_content.txt");
         $response2 = $this
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
