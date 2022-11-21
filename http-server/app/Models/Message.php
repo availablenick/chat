@@ -14,8 +14,8 @@ class Message extends Model
     const VIDEO_TYPE = 2;
 
     protected $fillable = [
-        'author',
-        'content',
-        'type',
+        "author",
+        "content",
+        "type",
     ];
 }

@@ -37,7 +37,7 @@ class SendMessageNotification
                 ]);
                 break;
             case Message::IMAGE_TYPE:
-                Http::attach('content', fopen(storage_path("app/" . $event->message->content), "r"))
+                Http::attach("content", fopen(storage_path("app/" . $event->message->content), "r"))
                     ->post("http://ws-server:3000/messages", [
                         "author" => $event->message->author,
                         "type" => "image",

@@ -12,8 +12,8 @@ class Session extends Model
     const LIFETIME = 5;
 
     protected $fillable = [
-        'session_id',
-        'username',
+        "session_id",
+        "username",
     ];
 
     public function scopeActive($query)
