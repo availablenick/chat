@@ -3,13 +3,20 @@ import { EventService } from "../event.service";
 import { Message } from "../message";
 import { User } from "../user";
 
+interface CustomMessage {
+  author: string,
+  contents: any[],
+  type: string,
+  containsLink: boolean,
+}
+
 @Component({
   selector: 'app-message-container',
   templateUrl: './message-container.component.html',
   styleUrls: ['./message-container.component.scss']
 })
 export class MessageContainerComponent implements OnInit {
-  messages: Message[] = [];
+  messages: CustomMessage[] = [];
 
   constructor(private eventHandler: EventService) { }
 
@@ -17,24 +24,21 @@ export class MessageContainerComponent implements OnInit {
     this.eventHandler.addListener("message-sent", (message: Message) => {
       switch (message.type) {
         case "text":
+          const contents = this.filterMessageContent(message.content);
           this.messages.push({
             author: message.author,
-            content: `${message.author}: ${message.content}`,
+            contents: contents,
             type: message.type,
+            containsLink: true,
           });
           break;
         case "image":
-          this.messages.push({
-            author: message.author,
-            content: message.content,
-            type: message.type,
-          });
-          break;
         case "video":
           this.messages.push({
             author: message.author,
-            content: message.content,
+            contents: [message.content],
             type: message.type,
+            containsLink: false,
           });
           break;
       }
@@ -43,17 +47,40 @@ export class MessageContainerComponent implements OnInit {
     this.eventHandler.addListener("user-joined", (user: User) => {
       this.messages.push({
         author: user.name,
-        content: `${user.name} joined the chat`,
+        contents: [`${user.name} joined the chat`],
         type: "text",
+        containsLink: false,
       });
     });
 
     this.eventHandler.addListener("user-left", (user: User) => {
       this.messages.push({
         author: user.name,
-        content: `${user.name} left the chat`,
+        contents: [`${user.name} left the chat`],
         type: "text",
+        containsLink: false,
       });
     });
+  }
+
+  filterMessageContent(content: string): any[] {
+    const contents = [];
+    const regex = /\[link\](.*?)\[\/link\]/g;
+    let currentIndex = 0;
+    let result;
+    while ((result = regex.exec(content)) !== null) {
+      if (result.index - currentIndex > 1) {
+        const nonLinkText = content.substring(currentIndex, result.index);
+        contents.push({ isLink: false, text: nonLinkText });
+      }
+
+      const linkText = result[1];
+      contents.push({ isLink: true, text: linkText });
+      currentIndex = regex.lastIndex;
+    }
+
+    const remainingText = content.substring(currentIndex, content.length);
+    contents.push({ isLink: false, text: remainingText });
+    return contents;
   }
 }

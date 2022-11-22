@@ -1,13 +1,32 @@
 <div class="message" *ngFor="let message of messages">
   <ng-container [ngSwitch]="message.type">
-    <ng-container *ngSwitchCase="'text'">{{ message.content }}</ng-container>
-    <ng-container *ngSwitchCase="'image'">
+    <ng-container *ngSwitchCase="'text'">
       {{ message.author }}:
-      <img src="{{ message.content }}" />
+      <ng-container *ngIf="message.containsLink; then linkContent; else simpleContent"></ng-container>
+      <ng-template #linkContent>
+        <ng-container *ngFor="let content of message.contents">
+          <ng-container *ngIf="content.isLink; then link; else text"></ng-container>
+          <ng-template #link>
+            <a href="{{ content.text }}">{{ content.text }}</a>
+          </ng-template>
+  
+          <ng-template #text>
+            {{ content.text }}
+          </ng-template>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #simpleContent>
+        {{ message.contents[0] }}
+      </ng-template>
+    </ng-container>
+    <ng-container *ngSwitchCase="'image'">
+      <span style="vertical-align: top">{{ message.author }}:</span>
+      <img src="{{ message.contents[0] }}" />
     </ng-container>
     <ng-container *ngSwitchCase="'video'">
-      {{ message.author }}:
-      <video src="{{ message.content }}" controls></video>
+      <span style="vertical-align: top">{{ message.author }}:</span>
+      <video src="{{ message.contents[0] }}" controls></video>
     </ng-container>
   </ng-container>
 </div>

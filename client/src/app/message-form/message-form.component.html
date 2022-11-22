@@ -1,17 +1,25 @@
-<form style="padding-top: 1rem" (submit)="textFormOnSubmit($event)">
-  <div>
-    <input style="width: 25rem" name="content" />
-    <button style="margin-left: 0.5rem" aria-label="Send message">
-      Send
-    </button>
+<div style="display: flex; padding-top: 1rem">
+  <div style="display: inline-block">
+    <form (submit)="textFormOnSubmit($event)">
+      <div>
+        <input style="width: 25rem" name="content" />
+        <button style="margin-left: 0.5rem" aria-label="Send message">
+          Send
+        </button>
+      </div>
+    </form>
+    
+    <div style="font-size: 0.75rem; padding-top: 0.25rem">
+      You can send a link by enclosing the URL in [link] and [/link] tags
+    </div>
   </div>
-</form>
 
-<form style="margin-left: 1rem; padding-top: 1rem" (submit)="mediaFormOnSubmit($event)">
-  <div>
-    <input type="file" style="width: 25rem" name="content" accept="image/*,video/*" />
-    <button style="margin-left: 0.5rem" aria-label="Send message">
-      Send
-    </button>
-  </div>
-</form>
+  <form style="margin-left: 1rem" (submit)="mediaFormOnSubmit($event)">
+    <div>
+      <input type="file" style="width: 25rem" name="content" accept="image/*,video/*" />
+      <button style="margin-left: 0.5rem" aria-label="Send message">
+        Send
+      </button>
+    </div>
+  </form>
+</div>
