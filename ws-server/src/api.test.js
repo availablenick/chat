@@ -132,4 +132,24 @@ describe("client communication", () => {
       done();
     });
   });
+
+  test("POST request to /messages returns 422 status code when user is not in the chat", (done) => {
+    const message = {
+      author: "test_author",
+      content: "test_content",
+      type: "text",
+    };
+
+    request(httpServer)
+      .post('/messages')
+      .send(message)
+      .expect(422)
+      .end((err) => {
+        if (err) {
+          return done(err);
+        }
+
+        return done();
+      });
+  })
 });

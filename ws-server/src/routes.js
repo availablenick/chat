@@ -7,13 +7,16 @@ function setUpRoutes(app, communicationHandler, userHandler) {
     };
 
     const namespaceName = userHandler.getNamespaceNameFrom(message.author);
-    if (namespaceName) {
-      const nsp = communicationHandler.getNamespaceFrom(namespaceName);
-      if (nsp) {
-        nsp.emit("message-sent", message);
-      }
+    if (!namespaceName) {
+      return res.status(422).end();
     }
-  
+
+    const nsp = communicationHandler.getNamespaceFrom(namespaceName);
+    if (!nsp) {
+      return res.status(422).end();
+    }
+
+    nsp.emit("message-sent", message);  
     res.status(204).end();
   });
 }
