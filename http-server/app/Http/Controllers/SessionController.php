@@ -21,7 +21,7 @@ class SessionController extends Controller
             if ($elapsedTime >= Session::LIFETIME) {
                 $session->delete();
             } else {
-                abort(400);
+                abort(422);
             }
         }
 

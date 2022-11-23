@@ -33,7 +33,7 @@ class SessionManagementTest extends TestCase
             "username" => "test_username",
         ]);
 
-        $response2->assertStatus(400);
+        $response2->assertStatus(422);
         $response2->assertCookieMissing("session");
     }
 
