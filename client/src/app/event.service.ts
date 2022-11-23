@@ -42,15 +42,15 @@ export class EventService {
       });
     });
 
-    this.socket.on("user-joined", (users: User[]) => {
+    this.socket.on("user-joined", (user: User) => {
       this.listeners["user-joined"].forEach((listener) => {
-        listener(users);
+        listener(user);
       });
     });
 
-    this.socket.on("user-left", (users: User[]) => {
+    this.socket.on("user-left", (user: User) => {
       this.listeners["user-left"].forEach((listener) => {
-        listener(users);
+        listener(user);
       });
     });
   }
