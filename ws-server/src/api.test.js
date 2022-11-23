@@ -22,7 +22,7 @@ describe("client communication", () => {
     communicationHandler.terminate();
   });
 
-  test("POST request to /messages with text type message works", (done) => {
+  test("POST /messages with text type message works", (done) => {
     const message = {
       author: "test_author1",
       content: "test_content",
@@ -59,7 +59,7 @@ describe("client communication", () => {
     });
   });
 
-  test("POST request to /messages with image type message works", (done) => {
+  test("POST /messages with image type message works", (done) => {
     const message = {
       author: "test_author1",
       content: "https://example.com/image.png",
@@ -96,7 +96,7 @@ describe("client communication", () => {
     });
   });
 
-  test("POST request to /messages with video type message works", (done) => {
+  test("POST /messages with video type message works", (done) => {
     const message = {
       author: "test_author1",
       content: "https://example.com/video.mp4",
@@ -133,7 +133,7 @@ describe("client communication", () => {
     });
   });
 
-  test("POST request to /messages returns 422 status code when user is not in the chat", (done) => {
+  test("POST /messages returns 422 status code when user is not in the chat", (done) => {
     const message = {
       author: "test_author",
       content: "test_content",
