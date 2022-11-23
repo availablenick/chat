@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-message-form',
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MessageFormComponent {
 
-  constructor(private http: HttpClient) { }
+  constructor(private messageHandler: MessageService) { }
 
   textFormOnSubmit(event: Event): void {
     event.preventDefault();
@@ -16,9 +16,7 @@ export class MessageFormComponent {
     const content = input.value;
     input.value = "";
     if (content !== "") {
-      this.http
-        .post("http://localhost:5000/api/v1/messages", { content, type: "0" }, { withCredentials: true })
-        .subscribe(() => { });
+      this.messageHandler.sendMessage({ content, type: "0" }).subscribe();
     }
   }
 
@@ -28,7 +26,7 @@ export class MessageFormComponent {
     if (input.files.length === 0) {
       return;
     }
-    
+
     const formData: FormData = new FormData();
     formData.append("content", input.files[0]);
     if (input.files[0].type.startsWith("image/")) {
@@ -40,8 +38,6 @@ export class MessageFormComponent {
     }
 
     input.value = "";
-    this.http
-      .post("http://localhost:5000/api/v1/messages", formData, { withCredentials: true })
-      .subscribe(() => { });
+    this.messageHandler.sendMessage(formData).subscribe();
   }
 }
