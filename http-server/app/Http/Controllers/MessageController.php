@@ -13,7 +13,12 @@ class MessageController extends Controller
     {
         $session_id = $request->cookie("session");
         $session = Session::where("session_id", $session_id)->first();
-        if ($session === null) {
+        if ($session === null || !$session->isActive()) {
+            if ($session !== null) {
+                $session->delete();
+                return response()->make([], 401)->withoutCookie("session");
+            }
+
             abort(401);
         }
 

@@ -20,4 +20,8 @@ class Session extends Model
     {
         $query->where("created_at", ">", now()->subMinutes(self::LIFETIME)->toDateTimeString());
     }
+
+    public function isActive() {
+        return $this->created_at > now()->subMinutes(self::LIFETIME)->toDateTimeString();
+    }
 }

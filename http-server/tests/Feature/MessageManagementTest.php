@@ -149,6 +149,26 @@ class MessageManagementTest extends TestCase
         $response->assertUnauthorized();
     }
 
+    public function test_message_cannot_be_created_with_expired_session()
+    {
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $this->travel(Session::LIFETIME)->minutes();
+        $session = Session::where("username", "test_username")->first();
+        $response2 = $this
+            ->withCookie("session", $session->session_id)
+            ->post(route("messages.store"), [
+                "content" => "test_content",
+                "type" => Message::TEXT_TYPE,
+            ]);
+
+        $response2->assertUnauthorized();
+        $response2->assertCookieExpired("session");
+        $this->assertDeleted($session);
+    }
+
     public function test_message_cannot_be_created_without_content()
     {
         $response1 = $this->post(route("users.select"), [
