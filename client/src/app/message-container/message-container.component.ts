@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef } from "@angular/core";
 import { EventService } from "../event.service";
 import { Message } from "../message";
 import { User } from "../user";
@@ -15,10 +15,14 @@ interface CustomMessage {
   templateUrl: './message-container.component.html',
   styleUrls: ['./message-container.component.scss']
 })
-export class MessageContainerComponent implements OnInit {
+export class MessageContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   messages: CustomMessage[] = [];
+  private containerObserver: any = null;
 
-  constructor(private eventHandler: EventService) { }
+  constructor(
+    private containerRef: ElementRef,
+    private eventHandler: EventService,
+  ) { }
 
   ngOnInit(): void {
     this.eventHandler.addListener("message-sent", (message: Message) => {
@@ -63,7 +67,28 @@ export class MessageContainerComponent implements OnInit {
     });
   }
 
-  filterMessageContent(content: string): any[] {
+  ngAfterViewInit(): void {
+    this.containerRef.nativeElement.scrollTop = this.containerRef.nativeElement.scrollHeight;
+    this.containerObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        switch (mutation.type) {
+          case "childList":
+            (<any>mutation.target).scrollTop = (<any>mutation.target).scrollHeight;
+            break;
+        }
+      });
+    });
+
+    this.containerObserver.observe(this.containerRef.nativeElement, { childList: true });
+  }
+
+  ngOnDestroy(): void {
+    if (this.containerObserver !== null) {
+      this.containerObserver.disconnect();
+    }
+  }
+
+  private filterMessageContent(content: string): any[] {
     const contents = [];
     const regex = /\[link\](.*?)\[\/link\]/g;
     let currentIndex = 0;
