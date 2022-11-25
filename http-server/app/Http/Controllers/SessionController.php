@@ -17,8 +17,7 @@ class SessionController extends Controller
 
         $session = Session::where("username", $validated["username"])->first();
         if ($session !== null) {
-            $elapsedTime = now()->diffInMinutes($session->created_at);
-            if ($elapsedTime >= Session::LIFETIME) {
+            if ($session->expiration_date <= now()->toDateTimeString()) {
                 $session->delete();
             } else {
                 abort(422);
@@ -32,6 +31,7 @@ class SessionController extends Controller
         Session::create([
             "session_id" => $session_id,
             "username" => $validated["username"],
+            "expiration_date" => now()->addMinutes(Session::LIFETIME)->toDateTimeString(),
         ]);
 
         return response()->noContent()->cookie("session", $session_id, Session::LIFETIME);

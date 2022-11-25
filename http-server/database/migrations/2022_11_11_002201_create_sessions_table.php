@@ -17,6 +17,7 @@ class CreateSessionsTable extends Migration
             $table->id();
             $table->string("session_id")->unique();
             $table->string("username")->unique();
+            $table->timestamp("expiration_date");
             $table->timestamps();
         });
     }

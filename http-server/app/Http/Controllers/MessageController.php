@@ -60,6 +60,7 @@ class MessageController extends Controller
 
         $message = Message::create($data);
         MessageSent::dispatch($message);
-        return response()->noContent();
+        $session->update(["expiration_date" => now()->addMinutes(Session::LIFETIME)->toDateTimeString()]);
+        return response()->noContent()->cookie("session", $session_id, Session::LIFETIME);
     }
 }

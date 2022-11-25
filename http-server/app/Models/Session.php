@@ -14,14 +14,15 @@ class Session extends Model
     protected $fillable = [
         "session_id",
         "username",
+        "expiration_date",
     ];
 
     public function scopeActive($query)
     {
-        $query->where("created_at", ">", now()->subMinutes(self::LIFETIME)->toDateTimeString());
+        $query->where("expiration_date", ">", now()->toDateTimeString());
     }
 
     public function isActive() {
-        return $this->created_at > now()->subMinutes(self::LIFETIME)->toDateTimeString();
+        return $this->expiration_date > now()->toDateTimeString();
     }
 }

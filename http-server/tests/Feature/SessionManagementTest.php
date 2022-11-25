@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Message;
 use App\Models\Session;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SessionManagementTest extends TestCase
@@ -114,7 +117,7 @@ class SessionManagementTest extends TestCase
         $response2 = $this->post(route("users.select"), [
             "username" => "test_username2",
         ]);
-        
+
         $session = Session::where("username", "test_username2")->first();
         $response3 = $this
             ->withCookie("session", $session->session_id)
@@ -138,5 +141,35 @@ class SessionManagementTest extends TestCase
         $response2 = $this->get(route("users.index"));
 
         $response2->assertUnauthorized();
+    }
+
+    public function test_session_is_refreshed_when_user_sends_a_message_before_expiration_time()
+    {
+        Event::fake();
+        Storage::fake();
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $this->travel((int) ceil(Session::LIFETIME/2))->minutes();
+        $session = Session::where("username", "test_username")->first();
+        $response2 = $this
+            ->withCookie("session", $session->session_id)
+            ->post(route("messages.store"), [
+                "content" => "test_content",
+                "type" => Message::TEXT_TYPE,
+            ]);
+
+        $this->travel((int) ceil(Session::LIFETIME/2))->minutes();
+        $response3 = $this
+            ->withCookie("session", $session->session_id)
+            ->post(route("messages.store"), [
+                "content" => "test_content",
+                "type" => Message::TEXT_TYPE,
+            ]);
+
+        $response3->assertNoContent();
+        $response3->assertCookieNotExpired("session");
+        $this->assertModelExists($session);
     }
 }
