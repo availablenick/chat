@@ -1,0 +1,36 @@
+:host {
+  background: white;
+  border: 1px solid black;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  height: 29rem;
+  position: fixed;
+  width: 27rem;
+  word-break: break-all;
+
+  > .top {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+    padding: 0.5rem;
+    flex: 0;
+  }
+
+  > .container {
+    flex: 10;
+    overflow: auto;
+  }
+
+  > .bottom {
+    align-items: center;
+    border-top: 1px solid black;
+    justify-content: center;
+    padding: 1rem;
+
+    > form {
+      display: flex;
+    }
+  }
+}

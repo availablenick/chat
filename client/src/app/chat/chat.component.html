@@ -4,12 +4,42 @@
 </ng-template>
 <ng-template #page>
   <div style="display: flex; height: 100%">
+    <app-room-list
+      (showRoomEvent)="showRoom($event)"
+      (leaveRoomEvent)="hideRoom()"
+    ></app-room-list>
     <div class="main">
       <h1 style="margin-top: 0">Chat</h1>
-      <app-message-container></app-message-container>
-      <app-message-form></app-message-form>
+      <div class="message-container">
+        <app-message-container [styles]="styles" [messages]="messages"></app-message-container>
+      </div>
+
+      <div style="padding-top: 1rem">
+        <form (submit)="textFormOnSubmit($event)">
+          <input style="width: 25rem" name="content" />
+          <button style="margin-left: 0.5rem" aria-label="Send message">
+            Send
+          </button>
+        </form>
+      
+        <div style="font-size: 0.75rem; padding-top: 0.25rem">
+          You can send a link by enclosing the URL in [link] and [/link] tags
+        </div>
+      
+        <form style="margin-top: 1rem" (submit)="mediaFormOnSubmit($event)">
+          <input type="file" name="content" accept="image/*,video/*" />
+          <button style="margin-left: 0.5rem" aria-label="Send media">
+            Send
+          </button>
+        </form>
+      </div>
     </div>
   
     <app-sidebar></app-sidebar>
+    <app-room
+      *ngIf="roomIsVisible"
+      [room]="selectedRoom!"
+      (hideRoomEvent)="hideRoom()"
+    ></app-room>
   </div>
 </ng-template>

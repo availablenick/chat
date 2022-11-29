@@ -1,0 +1,22 @@
+<div class="top">
+  <span>{{ room.username }}</span>
+  <button type="button" (click)="hideRoom()">-</button>
+</div>
+
+<div class="container">
+  <app-message-container [styles]="styles" [messages]="room.messages"></app-message-container>
+</div>
+
+<div class="bottom">
+  <form (submit)="textFormOnSubmit($event)">
+    <input style="flex: 1" name="content" />
+    <button style="margin-left: 0.5rem" type="">Send</button>
+  </form>
+
+  <form style="margin-top: 0.5rem" (submit)="mediaFormOnSubmit($event)">
+    <input style="flex: 1" type="file" name="content" accept="image/*,video/*" />
+    <button style="margin-left: 0.5rem" aria-label="Send message">
+      Send
+    </button>
+  </form>
+</div>

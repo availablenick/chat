@@ -5,7 +5,10 @@
   <ng-template #list>
     <ul>
       <li *ngFor="let username of usernames">
-          {{ username }}
+        {{ username }}
+        <button style="margin-left: 0.5rem" type="button" (click)="sendInvitation(username)">
+          Open private room
+        </button>
       </li>
     </ul>
   </ng-template>

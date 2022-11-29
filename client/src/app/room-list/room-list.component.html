@@ -1,0 +1,21 @@
+<ng-container *ngIf="roomHandler.getRooms().length > 0; then list; else empty"></ng-container>
+<ng-template #list>
+  <ul>
+    <li *ngFor="let room of roomHandler.getRooms()">
+      <button
+        style="overflow: hidden; text-overflow: ellipsis; width: 8rem"
+        type="button"
+        (click)="showRoom(room.id)"
+      >
+        {{ room.username }}
+      </button>
+      <button style="margin-left: 0.5rem" type="button" (click)="leaveRoom(room.id)">
+        &times;
+      </button>
+    </li>
+  </ul>
+</ng-template>
+<ng-template #empty><div style="text-align: center;">There are no private rooms</div></ng-template>
+<ng-template #empty>
+  <div style="text-align: center;">There are no private rooms</div>
+</ng-template>

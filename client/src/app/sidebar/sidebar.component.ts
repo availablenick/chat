@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { SessionService } from '../session.service';
 import { EventService } from '../event.service';
+import { RoomService } from '../room.service';
 import { User } from '../user';
 
 @Component({
@@ -16,6 +17,7 @@ export class SidebarComponent implements OnInit {
     private router: Router,
     private session: SessionService,
     private eventHandler: EventService,
+    private roomHandler: RoomService,
   ) { }
 
   ngOnInit(): void {
@@ -37,5 +39,9 @@ export class SidebarComponent implements OnInit {
       this.router.navigate(["/enter"]);
       this.eventHandler.disconnect();
     });
+  }
+
+  sendInvitation(username: string) {
+    this.roomHandler.inviteUser(username);
   }
 }

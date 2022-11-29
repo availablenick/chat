@@ -1,7 +1,14 @@
 .main {
   display: flex;
-  flex: 9;
+  flex: 55;
   flex-direction: column;
   height: 100%;
   padding: 2rem;
+
+  .message-container {
+    background: #eee;
+    border: 1px solid black;
+    height: 15rem;
+    overflow: auto;
+  }
 }

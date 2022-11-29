@@ -1,4 +1,4 @@
-<div class="message" *ngFor="let message of messages">
+<div class="message" [style]="styles.message" *ngFor="let message of parsedMessages">
   <ng-container [ngSwitch]="message.type">
     <ng-container *ngSwitchCase="'text'">
       {{ message.author }}:
@@ -22,11 +22,11 @@
     </ng-container>
     <ng-container *ngSwitchCase="'image'">
       <span style="vertical-align: top">{{ message.author }}:</span>
-      <img src="{{ message.contents[0] }}" />
+      <img [style]="styles.media" src="{{ message.contents[0] }}" />
     </ng-container>
     <ng-container *ngSwitchCase="'video'">
       <span style="vertical-align: top">{{ message.author }}:</span>
-      <video src="{{ message.contents[0] }}" controls></video>
+      <video [style]="styles.media" src="{{ message.contents[0] }}" controls></video>
     </ng-container>
   </ng-container>
 </div>
