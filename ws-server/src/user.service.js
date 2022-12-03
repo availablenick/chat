@@ -54,6 +54,10 @@ class UserService {
     return [];
   }
 
+  hasUser(username) {
+    return this.idByUsername.hasOwnProperty(username);
+  }
+
   hasRoomForPair(username1, username2) {
     if (this.roomByUserPair[`${username1}:${username2}`] || this.roomByUserPair[`${username2}:${username1}`]) {
       return true;

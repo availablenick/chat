@@ -43,8 +43,8 @@ describe("client communication", () => {
     };
 
     const port = httpServer.address().port;
-    const socket1 = Client(`http://localhost:${port}/main`);
-    const socket2 = Client(`http://localhost:${port}/main`);
+    const socket1 = Client(`http://localhost:${port}/`);
+    const socket2 = Client(`http://localhost:${port}/`);
     sockets.push(socket1, socket2);
 
     socket1.once("connect", () => {
@@ -81,8 +81,8 @@ describe("client communication", () => {
     };
     
     const port = httpServer.address().port;
-    const socket1 = Client(`http://localhost:${port}/main`);
-    const socket2 = Client(`http://localhost:${port}/main`);
+    const socket1 = Client(`http://localhost:${port}/`);
+    const socket2 = Client(`http://localhost:${port}/`);
     sockets.push(socket1, socket2);
 
     socket1.once("connect", () => {
@@ -119,8 +119,8 @@ describe("client communication", () => {
     };
     
     const port = httpServer.address().port;
-    const socket1 = Client(`http://localhost:${port}/main`);
-    const socket2 = Client(`http://localhost:${port}/main`);
+    const socket1 = Client(`http://localhost:${port}/`);
+    const socket2 = Client(`http://localhost:${port}/`);
     sockets.push(socket1, socket2);
 
     socket1.once("connect", () => {

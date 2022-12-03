@@ -6,17 +6,11 @@ function setUpRoutes(app, communicationHandler, userHandler) {
       type: req.body.type,
     };
 
-    const namespaceName = userHandler.getNamespaceNameFrom(message.author);
-    if (!namespaceName) {
+    if (!userHandler.hasUser(message.author)) {
       return res.status(422).end();
     }
 
-    const nsp = communicationHandler.getNamespaceFrom(namespaceName);
-    if (!nsp) {
-      return res.status(422).end();
-    }
-
-    nsp.emit("message-sent", message);
+    communicationHandler.sendMessageSentEvent(message);
     res.status(204).end();
   });
 
@@ -27,17 +21,7 @@ function setUpRoutes(app, communicationHandler, userHandler) {
       type: req.body.type,
     };
 
-    const namespaceName = userHandler.getNamespaceNameFrom(message.author);
-    if (!namespaceName) {
-      return res.status(422).end();
-    }
-
-    const nsp = communicationHandler.getNamespaceFrom(namespaceName);
-    if (!nsp) {
-      return res.status(422).end();
-    }
-
-    nsp.to(req.body.room).emit("private-message-sent", message, req.body.room);
+    communicationHandler.sendPrivateMessageSentEvent(message, req.body.room);
     res.status(204).end();
   });
 }

@@ -7,7 +7,7 @@ class CommunicationService {
 
   init(httpServer, config = {}) {
     this.io = new Server(httpServer, config);
-    this.io.of(/\/main/).on("connection", (socket) => {
+    this.io.on("connection", (socket) => {
       this.setUpListeners(socket, this.userHandler);
     });
   }
@@ -16,8 +16,12 @@ class CommunicationService {
     this.io.close();
   }
 
-  getNamespaceFrom(namespaceName) {
-    return this.io.of(namespaceName);
+  sendMessageSentEvent(message) {
+    this.io.emit("message-sent", message);
+  }
+
+  sendPrivateMessageSentEvent(message, room) {
+    this.io.to(room).emit("private-message-sent", message, room);
   }
 
   setUpListeners(socket) {
@@ -77,7 +81,7 @@ class CommunicationService {
   }
 
   async removeSocketsFromRoom(room, callback) {
-    const sockets = await this.io.of("/main").in(room).fetchSockets();
+    const sockets = await this.io.of("/").in(room).fetchSockets();
     sockets.forEach((socket) => {
       socket.leave(room);
       callback(socket);
