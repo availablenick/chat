@@ -137,6 +137,7 @@ class PrivateMessageManagementTest extends TestCase
 
     public function test_private_message_cannot_be_sent_by_unauthenticated_user()
     {
+        Event::fake();
         $response = $this->post(route("private-messages.store"), [
             "content" => "test_content",
             "type" => "text",
@@ -170,6 +171,7 @@ class PrivateMessageManagementTest extends TestCase
 
     public function test_private_message_cannot_be_sent_without_content()
     {
+        Event::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
@@ -184,6 +186,7 @@ class PrivateMessageManagementTest extends TestCase
 
     public function test_private_message_cannot_be_sent_without_type()
     {
+        Event::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
@@ -198,6 +201,7 @@ class PrivateMessageManagementTest extends TestCase
 
     public function test_private_message_cannot_be_sent_without_room()
     {
+        Event::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);

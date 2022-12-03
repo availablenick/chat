@@ -71,6 +71,8 @@ class MessageManagementTest extends TestCase
 
     public function test_message_of_image_type_cannot_be_created_with_wrong_mime_type()
     {
+        Event::fake();
+        Storage::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
@@ -120,6 +122,8 @@ class MessageManagementTest extends TestCase
 
     public function test_message_of_video_type_cannot_be_created_with_wrong_mime_type()
     {
+        Event::fake();
+        Storage::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
@@ -141,6 +145,7 @@ class MessageManagementTest extends TestCase
 
     public function test_message_cannot_be_created_by_unauthenticated_user()
     {
+        Event::fake();
         $response = $this->post(route("messages.store"), [
             "content" => "test_content",
             "type" => Message::TEXT_TYPE,
@@ -151,6 +156,7 @@ class MessageManagementTest extends TestCase
 
     public function test_message_cannot_be_created_with_expired_session()
     {
+        Event::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
@@ -171,6 +177,7 @@ class MessageManagementTest extends TestCase
 
     public function test_message_cannot_be_created_without_content()
     {
+        Event::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
@@ -185,6 +192,7 @@ class MessageManagementTest extends TestCase
 
     public function test_message_cannot_be_created_without_type()
     {
+        Event::fake();
         $response1 = $this->post(route("users.select"), [
             "username" => "test_username",
         ]);
