@@ -21,6 +21,10 @@ function setUpRoutes(app, communicationHandler, userHandler) {
       type: req.body.type,
     };
 
+    if (!userHandler.hasUser(message.author)) {
+      return res.status(422).end();
+    }
+
     communicationHandler.sendPrivateMessageSentEvent(message, req.body.room);
     res.status(204).end();
   });

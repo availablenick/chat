@@ -25,30 +25,29 @@ class CommunicationService {
   }
 
   setUpListeners(socket) {
-    socket.on("user-joined", (user) => {
-      this.userHandler.assignUserToId({ username: user.name }, socket.id);
-      this.userHandler.assignUsernameToNamespaceName(user.name, socket.nsp.name);
-      socket.broadcast.emit("user-joined", user);
+    socket.on("user-joined", (username) => {
+      this.userHandler.assignUsernameToId(username, socket.id);
+      socket.broadcast.emit("user-joined", username);
     });
   
     socket.on("disconnect", () => {
-      const user = this.userHandler.getUserFrom(socket.id);
-      if (user) {
-        this.userHandler.getRoomsFrom(user.username).forEach((room) => {
-          socket.to(room).emit("user-left-room", user.username, room);
+      const username = this.userHandler.getUsernameFrom(socket.id);
+      if (username) {
+        this.userHandler.getRoomsFrom(username).forEach((room) => {
+          socket.to(room).emit("user-left-room", username, room);
           this.removeSocketsFromRoom(room, (s) => {
-            const remainingUsername = this.userHandler.getUserFrom(s.id).username;
-            this.userHandler.removeUserPairRoom(user.username, remainingUsername);
+            const remainingUsername = this.userHandler.getUsernameFrom(s.id);
+            this.userHandler.removeUserPairRoom(username, remainingUsername);
           });
         });
 
         this.userHandler.removeUser(socket.id);
-        socket.nsp.emit("user-left", { name: user.username });
+        socket.nsp.emit("user-left", username);
       }
     });
 
     socket.on("invite", (invitedUsername, callback) => {
-      const invitingUsername = this.userHandler.getUserFrom(socket.id).username;
+      const invitingUsername = this.userHandler.getUsernameFrom(socket.id);
       if (invitingUsername === invitedUsername) {
         return;
       }
@@ -74,7 +73,7 @@ class CommunicationService {
       socket.to(roomId).emit("user-left-room", username, roomId);
       socket.leave(roomId);
       this.removeSocketsFromRoom(roomId, (socket) => {
-        const remainingUsername = this.userHandler.getUserFrom(socket.id).username;
+        const remainingUsername = this.userHandler.getUsernameFrom(socket.id);
         this.userHandler.removeUserPairRoom(username, remainingUsername);
       });
     });

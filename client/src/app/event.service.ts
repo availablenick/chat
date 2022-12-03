@@ -22,7 +22,7 @@ export class EventService {
   };
 
   constructor() {
-    this.socket = io("http://localhost:3000/main");
+    this.socket = io("http://localhost:3000/");
     this.setUpListeners();
   }
 
@@ -48,12 +48,8 @@ export class EventService {
     })
   }
 
-  sendUserJoinedEvent(user: User): void {
-    this.socket.emit("user-joined", user);
-  }
-
-  sendMessageSentEvent(message: Message): void {
-    this.socket.emit("message-sent", message);
+  sendUserJoinedEvent(username: string): void {
+    this.socket.emit("user-joined", username);
   }
 
   sendInviteEvent(username: string, callback: Function): void {
@@ -87,15 +83,15 @@ export class EventService {
       });
     });
 
-    this.socket.on("user-joined", (user: User) => {
+    this.socket.on("user-joined", (username: string) => {
       this.listeners["user-joined"].forEach((listener) => {
-        listener(user);
+        listener(username);
       });
     });
 
-    this.socket.on("user-left", (user: User) => {
+    this.socket.on("user-left", (username: string) => {
       this.listeners["user-left"].forEach((listener) => {
-        listener(user);
+        listener(username);
       });
     });
 

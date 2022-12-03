@@ -2,20 +2,15 @@ const { v4: uuidv4 } = require("uuid");
 
 class UserService {
   constructor() {
-    this.userById = {};
-    this.namespaceByUsername = {};
+    this.usernameById = {};
     this.idByUsername = {};
     this.roomByUserPair = {};
     this.roomsByUsername = {};
   }
 
-  assignUserToId(user, id) {
-    this.userById[id] = user;
-    this.idByUsername[user.username] = id;
-  }
-
-  assignUsernameToNamespaceName(username, namespaceName) {
-    this.namespaceByUsername[username] = namespaceName;
+  assignUsernameToId(username, id) {
+    this.usernameById[id] = username;
+    this.idByUsername[username] = id;
   }
 
   assignRoomToUserPair(username1, username2) {
@@ -33,13 +28,9 @@ class UserService {
     this.roomByUserPair[`${username1}:${username2}`] = id;
     return id;
   }
-
-  getUserFrom(id) {
-    return this.userById[id];
-  }
-
-  getNamespaceNameFrom(username) {
-    return this.namespaceByUsername[username];
+  
+  getUsernameFrom(id) {
+    return this.usernameById[id];
   }
 
   getIdFrom(username) {
@@ -67,9 +58,8 @@ class UserService {
   }
 
   removeUser(id) {
-    delete this.namespaceByUsername[this.userById[id].username];
-    delete this.idByUsername[this.userById[id].username];
-    delete this.userById[id];
+    delete this.idByUsername[this.usernameById[id]];
+    delete this.usernameById[id];
   }
 
   removeUserPairRoom(username1, username2) {
@@ -81,8 +71,7 @@ class UserService {
   }
 
   clear() {
-    this.userById = {};
-    this.namespaceByUsername = {};
+    this.usernameById = {};
     this.idByUsername = {};
     this.roomByUserPair = {};
     this.roomsByUsername = {};

@@ -21,12 +21,12 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.eventHandler.addListener("user-joined", (user: User) => {
-      this.usernames.add(user.name);
+    this.eventHandler.addListener("user-joined", (username: string) => {
+      this.usernames.add(username);
     });
 
-    this.eventHandler.addListener("user-left", (user: User) => {
-      this.usernames.delete(user.name);
+    this.eventHandler.addListener("user-left", (username: string) => {
+      this.usernames.delete(username);
     });
 
     this.session.requestAll().subscribe((response: any) => {

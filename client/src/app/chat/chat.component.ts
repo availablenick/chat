@@ -38,13 +38,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.session.hasUser()) {
       this.isLoading = false;
       this.eventHandler.connect();
-      this.eventHandler.sendUserJoinedEvent(this.session.getUser()!);
+      this.eventHandler.sendUserJoinedEvent(this.session.getUser()!.username);
     } else {
       this.session.requestData().subscribe({
         next: (response: any) => {
-          this.session.setUser({ name: response.body.user.username });
+          this.session.setUser({ username: response.body.user.username });
           this.eventHandler.connect();
-          this.eventHandler.sendUserJoinedEvent({ name: response.body.user.username });
+          this.eventHandler.sendUserJoinedEvent(response.body.user.username);
           this.isLoading = false;
           this.setUpListeners();
         },
@@ -105,18 +105,18 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.messages = [...this.messages, message];
     });
 
-    this.eventHandler.addListener("user-joined", (user: User) => {
+    this.eventHandler.addListener("user-joined", (username: string) => {
       this.messages = [...this.messages, {
-        author: user.name,
-        content: `${user.name} joined the chat`,
+        author: username,
+        content: `${username} joined the chat`,
         type: "text",
       }];
     });
 
-    this.eventHandler.addListener("user-left", (user: User) => {
+    this.eventHandler.addListener("user-left", (username: string) => {
       this.messages = [...this.messages, {
-        author: user.name,
-        content: `${user.name} left the chat`,
+        author: username,
+        content: `${username} left the chat`,
         type: "text",
       }];
     });

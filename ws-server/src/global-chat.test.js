@@ -6,7 +6,7 @@ const { setUpRoutes } = require("./routes");
 const CommunicationService = require("./communication.service");
 const UserService = require("./user.service");
 
-describe("client communication", () => {
+describe("global chat", () => {
   let communicationHandler, httpServer, sockets;
 
   beforeAll(() => {
@@ -33,7 +33,49 @@ describe("client communication", () => {
       socket.removeAllListeners();
       socket.disconnect();
     });
-  })
+  });
+
+  test("users are notified when someone joins the chat", (done) => {
+    const port = httpServer.address().port;
+    const socket1 = Client(`http://localhost:${port}/`);
+    const socket2 = Client(`http://localhost:${port}/`);
+    sockets.push(socket1, socket2);
+
+    socket1.once("connect", () => {
+      socket1.once("user-joined", (username) => {
+        expect(username).toBe("test_username2");
+        done();
+      });
+    });
+
+    socket2.once("connect", () => {
+      socket2.emit("user-joined", "test_username2");
+    });
+  });
+
+  test("users are notified when someone disconnects", (done) => {
+    const port = httpServer.address().port;
+    const socket1 = Client(`http://localhost:${port}/`);
+    const socket2 = Client(`http://localhost:${port}/`);
+    sockets.push(socket1, socket2);
+
+    socket1.once("connect", () => {
+      socket1.once("user-joined", () => {
+        socket2.disconnect();
+      });
+
+      socket1.once("user-left", (username) => {
+        expect(username).toBe("test_username2");
+        done();
+      });
+
+      socket1.emit("user-joined", "test_username1");
+    });
+
+    socket2.once("connect", () => {
+      socket2.emit("user-joined", "test_username2");
+    });
+  });
 
   test("POST /messages with text type message works", (done) => {
     const message = {
@@ -65,11 +107,11 @@ describe("client communication", () => {
         done();
       });
 
-      socket1.emit("user-joined", { name: "test_author1" });
+      socket1.emit("user-joined", "test_author1");
     });
 
     socket2.once("connect", () => {
-      socket2.emit("user-joined", { name: "test_author2" });
+      socket2.emit("user-joined", "test_author2");
     });
   });
 
@@ -103,11 +145,11 @@ describe("client communication", () => {
         done();
       });
 
-      socket1.emit("user-joined", { name: "test_author1" });
+      socket1.emit("user-joined", "test_author1");
     });
 
     socket2.once("connect", () => {
-      socket2.emit("user-joined", { name: "test_author2" });
+      socket2.emit("user-joined", "test_author2");
     });
   });
 
@@ -138,16 +180,14 @@ describe("client communication", () => {
 
       socket1.once("message-sent", (data) => {
         expect(data).toMatchObject(message);
-        socket1.disconnect();
-        socket2.disconnect();
         done();
       });
 
-      socket1.emit("user-joined", { name: "test_author1" });
+      socket1.emit("user-joined", "test_author1");
     });
 
     socket2.once("connect", () => {
-      socket2.emit("user-joined", { name: "test_author2" });
+      socket2.emit("user-joined", "test_author2");
     });
   });
 

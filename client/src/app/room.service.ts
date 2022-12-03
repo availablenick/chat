@@ -52,7 +52,7 @@ export class RoomService {
       return;
     }
 
-    const userIsInvitingThemself = username === this.session.getUser()!.name;
+    const userIsInvitingThemself = username === this.session.getUser()!.username;
     if (!userIsInvitingThemself) {
       this.eventHandler.sendInviteEvent(username, (roomId: string | null) => {
         if (roomId !== null) {
@@ -68,7 +68,7 @@ export class RoomService {
     }
 
     if (this.rooms[roomId].isActive) {
-      this.eventHandler.sendUserLeftRoomEvent(this.session.getUser()!.name, roomId);
+      this.eventHandler.sendUserLeftRoomEvent(this.session.getUser()!.username, roomId);
     }
 
     delete this.rooms[roomId];

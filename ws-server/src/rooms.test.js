@@ -50,11 +50,11 @@ describe("private rooms", () => {
         });
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -69,7 +69,7 @@ describe("private rooms", () => {
         socket1.emit("invite", "test_user2", () => {});
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -79,7 +79,7 @@ describe("private rooms", () => {
         done();
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -95,7 +95,7 @@ describe("private rooms", () => {
         done(new Error("test_user1 should not receive invite event"));
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
       socket1.emit("invite", "test_user1", () => {});
     });
   });
@@ -109,13 +109,13 @@ describe("private rooms", () => {
     const timeoutId = setTimeout(() => { done(); }, 3000);
 
     socket1.once("connect", () => {
-      socket1.on("user-joined", (user) => {
-        if (user.name === "test_user3") {
+      socket1.on("user-joined", (username) => {
+        if (username === "test_user3") {
           socket1.emit("invite", "test_user3", () => {});
         }
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -124,11 +124,11 @@ describe("private rooms", () => {
         done(Error("test_user2 should not receive invite event"));
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
 
     socket3.once("connect", () => {
-      socket3.emit("user-joined", { name: "test_user3" });
+      socket3.emit("user-joined", "test_user3");
     });
   });
 
@@ -149,7 +149,7 @@ describe("private rooms", () => {
         done();
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -157,7 +157,7 @@ describe("private rooms", () => {
         socket2.emit("user-left-room", "test_user2", roomId);
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -165,7 +165,7 @@ describe("private rooms", () => {
     const port = httpServer.address().port;
     const socket1 = Client(`http://localhost:${port}/`);
     const socket2 = Client(`http://localhost:${port}/`);
-    sockets.push(socket1);
+    sockets.push(socket1, socket2);
 
     socket1.once("connect", () => {
       socket1.once("user-joined", () => {
@@ -178,7 +178,7 @@ describe("private rooms", () => {
         done();
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -186,7 +186,7 @@ describe("private rooms", () => {
         socket2.disconnect();
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -199,13 +199,13 @@ describe("private rooms", () => {
     const timeoutId = setTimeout(() => { done(); }, 3000);
 
     socket1.once("connect", () => {
-      socket1.on("user-joined", (user) => {
-        if (user.name === "test_user3") {
+      socket1.on("user-joined", (username) => {
+        if (username === "test_user3") {
           socket1.emit("invite", "test_user3", () => {});
         }
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -214,7 +214,7 @@ describe("private rooms", () => {
         done(new Error("test_user2 should not receive user-left-room event"));
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
 
     socket3.once("connect", () => {
@@ -222,7 +222,7 @@ describe("private rooms", () => {
         socket3.emit("user-left-room", "test_user1", roomId);
       });
 
-      socket3.emit("user-joined", { name: "test_user3" });
+      socket3.emit("user-joined", "test_user3");
     });
   });
 
@@ -237,7 +237,7 @@ describe("private rooms", () => {
         socket1.emit("invite", "test_user2", () => {});
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -271,7 +271,7 @@ describe("private rooms", () => {
         done();
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -297,7 +297,7 @@ describe("private rooms", () => {
         done();
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -320,7 +320,7 @@ describe("private rooms", () => {
           });
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -333,13 +333,13 @@ describe("private rooms", () => {
     const timeoutId = setTimeout(() => { done(); }, 3000);
 
     socket1.once("connect", () => {
-      socket1.on("user-joined", (user) => {
-        if (user.name === "test_user3") {
+      socket1.on("user-joined", (username) => {
+        if (username === "test_user3") {
           socket1.emit("invite", "test_user3", () => {});
         }
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -348,7 +348,7 @@ describe("private rooms", () => {
         done(new Error("test_user2 should not receive private-message-sent event"));
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
 
     socket3.once("connect", () => {
@@ -371,7 +371,7 @@ describe("private rooms", () => {
           });
       });
 
-      socket3.emit("user-joined", { name: "test_user3" });
+      socket3.emit("user-joined", "test_user3");
     });
   });
 
@@ -387,7 +387,7 @@ describe("private rooms", () => {
         socket1.emit("invite", "test_user2", () => {});
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -400,7 +400,7 @@ describe("private rooms", () => {
         socket1.emit("invite", "test_user2", () => {});
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -419,7 +419,7 @@ describe("private rooms", () => {
         socket1.emit("invite", "test_user2", () => {});
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
@@ -431,7 +431,7 @@ describe("private rooms", () => {
         socket2.emit("user-left-room", "test_user2", roomId);
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
   });
 
@@ -455,14 +455,14 @@ describe("private rooms", () => {
         });
       });
 
-      socket1.emit("user-joined", { name: "test_user1" });
+      socket1.emit("user-joined", "test_user1");
     });
 
     socket2.once("connect", () => {
       socket2.once("invite", () => {
         socket2.once("disconnect", () => {
           socket2.once("connect", () => {            
-            socket2.emit("user-joined", { name: "test_user2" });
+            socket2.emit("user-joined", "test_user2");
           });
 
           socket2.connect();
@@ -471,7 +471,28 @@ describe("private rooms", () => {
         socket2.disconnect();
       });
 
-      socket2.emit("user-joined", { name: "test_user2" });
+      socket2.emit("user-joined", "test_user2");
     });
+  });
+
+  test("POST /private-messages returns 422 status code when user is not in the chat", (done) => {
+    const message = {
+      author: "test_author",
+      content: "test_content",
+      type: "text",
+      room: "test_room",
+    };
+
+    request(httpServer)
+      .post('/private-messages')
+      .send(message)
+      .expect(422)
+      .end((err) => {
+        if (err) {
+          return done(err);
+        }
+
+        return done();
+      });
   });
 });

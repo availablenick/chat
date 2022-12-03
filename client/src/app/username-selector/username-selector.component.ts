@@ -27,7 +27,7 @@ export class UsernameSelectorComponent implements OnInit {
     const username = (<any>event.target).querySelector("input[name=username]").value;
     this.session.attemptLogin(username).subscribe({
       next: () => {
-        this.session.setUser({ name: username });
+        this.session.setUser({ username });
         this.statusMessage = "Joining chat...";
         this.router.navigate(["/chat"]);
       },
