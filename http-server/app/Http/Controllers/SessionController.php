@@ -45,7 +45,9 @@ class SessionController extends Controller
             abort(401);
         }
 
-        return SessionResource::collection(Session::active()->get());
+        return SessionResource::collection(
+            Session::active()->where("session_id", "!=", $session_id)->get()
+        );
     }
 
     public function show(Request $request)
