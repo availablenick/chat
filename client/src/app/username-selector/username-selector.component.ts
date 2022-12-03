@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { SessionService } from "../session.service";
 
@@ -31,8 +32,11 @@ export class UsernameSelectorComponent implements OnInit {
         this.statusMessage = "Joining chat...";
         this.router.navigate(["/chat"]);
       },
-      error: () => {
-        this.statusMessage = "This username is already being used";
+      error: (response: HttpErrorResponse) => {
+        this.statusMessage = response.error.message;
+        if (response.error.errors) {
+          this.statusMessage = response.error.errors.username;
+        }
       }
     });
   }

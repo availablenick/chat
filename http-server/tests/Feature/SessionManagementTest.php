@@ -40,6 +40,15 @@ class SessionManagementTest extends TestCase
         $response2->assertCookieMissing("session");
     }
 
+    public function test_client_cannot_select_username_with_length_greater_than_20()
+    {
+        $response = $this->post(route("users.select"), [
+            "username" => "test_very_long_username",
+        ]);
+
+        $response->assertInvalid("username");
+    }
+
     public function test_client_cannot_select_empty_username()
     {
         $response = $this->post(route("users.select"));

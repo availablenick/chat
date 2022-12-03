@@ -12,7 +12,7 @@ class SessionController extends Controller
     public function selectName(Request $request)
     {
         $validated = $request->validate([
-            "username" => "required",
+            "username" => "required|max:20",
         ]);
 
         $session = Session::where("username", $validated["username"])->first();
@@ -20,7 +20,7 @@ class SessionController extends Controller
             if ($session->expiration_date <= now()->toDateTimeString()) {
                 $session->delete();
             } else {
-                abort(422);
+                abort(422, "Username is already being used");
             }
         }
 

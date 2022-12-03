@@ -7,7 +7,8 @@
         <button style="margin-left: 0.5rem">Join chat</button>
       </div>
 
-      <div style="margin-top: 0.5rem" *ngIf="statusMessage.length > 0">
+      <span style="font-size: 0.8rem">Username must have 20 characters at most</span>
+      <div style="margin-top: 0.75rem" *ngIf="statusMessage.length > 0">
         {{ statusMessage }}
       </div>
     </div>
