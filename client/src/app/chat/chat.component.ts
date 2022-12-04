@@ -107,17 +107,17 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.eventHandler.addListener("user-joined", (username: string) => {
       this.messages = [...this.messages, {
-        author: username,
+        author: "",
         content: `${username} joined the chat`,
-        type: "text",
+        type: "warning",
       }];
     });
 
     this.eventHandler.addListener("user-left", (username: string) => {
       this.messages = [...this.messages, {
-        author: username,
+        author: "",
         content: `${username} left the chat`,
-        type: "text",
+        type: "warning",
       }];
     });
   }

@@ -24,9 +24,9 @@ export class RoomService {
 
     eventHandler.addListener("user-left-room", (_: string, roomId: string) => {
       const message = {
-        author: this.rooms[roomId].username,
+        author: "",
         content: `${this.rooms[roomId].username} left`,
-        type: "text",
+        type: "warning",
       };
 
       this.addMessageToRoom(message, roomId);

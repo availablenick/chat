@@ -1,5 +1,12 @@
 import { Component, Input, AfterViewInit, OnDestroy, ElementRef } from "@angular/core";
-import { Message, CustomMessage } from "../message";
+import { Message } from "../message";
+
+interface CustomMessage {
+  author: string,
+  contents: any[],
+  type: string,
+  containsLink: boolean,
+}
 
 @Component({
   selector: 'app-message-container',

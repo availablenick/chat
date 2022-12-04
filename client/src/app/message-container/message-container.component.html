@@ -20,13 +20,19 @@
         {{ message.contents[0] }}
       </ng-template>
     </ng-container>
+
     <ng-container *ngSwitchCase="'image'">
       <span style="vertical-align: top">{{ message.author }}:</span>
       <img [style]="styles.media" src="{{ message.contents[0] }}" />
     </ng-container>
+
     <ng-container *ngSwitchCase="'video'">
       <span style="vertical-align: top">{{ message.author }}:</span>
       <video [style]="styles.media" src="{{ message.contents[0] }}" controls></video>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'warning'">
+      {{ message.contents[0] }}
     </ng-container>
   </ng-container>
 </div>

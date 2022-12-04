@@ -4,9 +4,3 @@ export interface Message {
   type: string,
 }
 
-export interface CustomMessage {
-  author: string,
-  contents: any[],
-  type: string,
-  containsLink: boolean,
-}
