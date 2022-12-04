@@ -39,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.eventHandler.connect();
       this.eventHandler.sendUserJoinedEvent(this.session.getUser()!.username);
+      this.setUpListeners();
     } else {
       this.session.requestData().subscribe({
         next: (response: any) => {
