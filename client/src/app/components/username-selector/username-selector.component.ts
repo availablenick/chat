@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { SessionService } from "../session.service";
+import { SessionService } from "../../services/session.service";
 
 @Component({
   selector: 'app-username-selector',

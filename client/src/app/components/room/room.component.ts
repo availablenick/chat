@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { Room } from "../room";
-import { CommunicationService } from "../communication.service";
+import { Room } from "../../interfaces/room";
+import { CommunicationService } from "../../services/communication.service";
 
 @Component({
   selector: 'app-room',

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { CommunicationService } from "./communication.service";
 import { SessionService } from "./session.service";
-import { Message } from "./message";
-import { Room } from "./room";
+import { Message } from "../interfaces/message";
+import { Room } from "../interfaces/room";
 
 @Injectable({
   providedIn: 'root'

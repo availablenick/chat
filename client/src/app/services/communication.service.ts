@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { io, Socket } from "socket.io-client";
-import { Message } from "./message";
+import { Message } from "../interfaces/message";
 
 interface ListenersByEvent {
   [event: string]: Function[],

@@ -1,5 +1,5 @@
 import { Component, Input, AfterViewInit, OnDestroy, ElementRef } from "@angular/core";
-import { Message } from "../message";
+import { Message } from "../../interfaces/message";
 
 interface CustomMessage {
   author: string,

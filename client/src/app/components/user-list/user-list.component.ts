@@ -1,16 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { SessionService } from '../session.service';
-import { CommunicationService } from '../communication.service';
-import { RoomService } from '../room.service';
-import { User } from '../user';
+import { SessionService } from '../../services/session.service';
+import { CommunicationService } from '../../services/communication.service';
+import { RoomService } from '../../services/room.service';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  selector: 'app-user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class UserListComponent implements OnInit {
   @Input() set initialUsernames(initialUsernames: string[]) {
     initialUsernames.forEach((username) => {
       this.usernames.add(username);

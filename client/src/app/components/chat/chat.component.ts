@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
-import { CommunicationService } from "../communication.service";
-import { SessionService } from "../session.service";
-import { Message } from "../message";
-import { Room } from "../room";
+import { CommunicationService } from "../../services/communication.service";
+import { SessionService } from "../../services/session.service";
+import { Message } from "../../interfaces/message";
+import { Room } from "../../interfaces/room";
 
 @Component({
   selector: 'app-chat',

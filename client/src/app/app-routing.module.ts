@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ChatComponent } from '../chat/chat.component';
-import { UsernameSelectorComponent } from '../username-selector/username-selector.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { UsernameSelectorComponent } from './components/username-selector/username-selector.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/enter', pathMatch: 'full' },

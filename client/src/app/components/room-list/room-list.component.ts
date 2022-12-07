@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from "@angular/core";
-import { RoomService } from "../room.service";
-import { Room } from "../room";
+import { RoomService } from "../../services/room.service";
+import { Room } from "../../interfaces/room";
 
 @Component({
   selector: 'app-room-list',
