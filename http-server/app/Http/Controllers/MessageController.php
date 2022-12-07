@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageSent;
-use App\Models\Message;
 use App\Models\Session;
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -25,40 +24,41 @@ class MessageController extends Controller
         $validated = $request->validate([
             "content" => "required",
             "type" => "required",
+            "room" => "nullable",
         ]);
 
-        $data = [
+        $message = (object) [
             "author" => $session->username,
-            "type" => $validated["type"],
+            "type" => $request->type,
+            "room" => $request->room,
         ];
 
         switch ($validated["type"]) {
-            case Message::TEXT_TYPE:
-                $data["content"] = $validated["content"];
+            case "text":
+                $message->content = $validated["content"];
                 break;
-            case Message::IMAGE_TYPE:
+            case "image":
                 $file = $request->file("content");
                 if (!str_starts_with($file->getMimeType(), "image/")) {
                     abort(422);
                 }
 
                 $filepath = $file->store("public/images");
-                $data["content"] = $filepath;
+                $message->content = str_replace("public/", "", $filepath);
                 break;
-            case Message::VIDEO_TYPE:
+            case "video":
                 $file = $request->file("content");
                 if (!str_starts_with($file->getMimeType(), "video/")) {
                     abort(422);
                 }
 
                 $filepath = $file->store("public/videos");
-                $data["content"] = $filepath;
+                $message->content = str_replace("public/", "", $filepath);
                 break;
             default:
                 return abort(422);
         }
 
-        $message = Message::create($data);
         MessageSent::dispatch($message);
         $session->update(["expiration_date" => now()->addMinutes(Session::LIFETIME)->toDateTimeString()]);
         return response()->noContent()->cookie("session", $session_id, Session::LIFETIME);

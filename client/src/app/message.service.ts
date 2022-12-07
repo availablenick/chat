@@ -15,8 +15,4 @@ export class MessageService {
   sendMessage(data: object): Observable<any> {
     return this.http.post("http://localhost:5000/api/v1/messages", data, this.httpOptions);
   }
-
-  sendPrivateMessage(data: object): Observable<any> {
-    return this.http.post("http://localhost:5000/api/v1/private-messages", data, this.httpOptions);
-  }
 }

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Events\MessageSent;
 use App\Listeners\SendMessageNotification;
-use App\Models\Message;
 use App\Models\Session;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -16,32 +15,31 @@ class MessageManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_message_of_text_type_can_be_created()
+    public function test_message_of_text_type_can_be_sent()
     {
         Event::fake();
         $response1 = $this->post(route("users.select"), [
-            "username" => "test_username",
+            "username" => "test_username1",
         ]);
 
-        $session = Session::where("username", "test_username")->first();
+        $session = Session::where("username", "test_username1")->first();
         $response2 = $this
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => "test_content",
-                "type" => Message::TEXT_TYPE,
+                "type" => "text",
+                "room" => "test_room",
             ]);
 
         $response2->assertNoContent();
-        $this->assertDatabaseHas("messages", [
-            "content" => "test_content",
-            "type" => Message::TEXT_TYPE,
-        ]);
-
         Event::assertDispatched(MessageSent::class);
-        Event::assertListening(MessageSent::class, SendMessageNotification::class);
+        Event::assertListening(
+            MessageSent::class,
+            SendMessageNotification::class
+        );
     }
 
-    public function test_message_of_image_type_can_be_created()
+    public function test_message_of_image_type_can_be_sent()
     {
         Event::fake();
         Storage::fake();
@@ -55,21 +53,20 @@ class MessageManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => $file,
-                "type" => Message::IMAGE_TYPE,
+                "type" => "image",
+                "room" => "test_room",
             ]);
 
         $response2->assertNoContent();
-        $this->assertDatabaseHas("messages", [
-            "type" => Message::IMAGE_TYPE,
-        ]);
-
-        $message = Message::where("type", Message::IMAGE_TYPE)->first();
-        Storage::disk()->assertExists($message->content);
+        Storage::disk()->assertExists("public/images/" . $file->hashName());
         Event::assertDispatched(MessageSent::class);
-        Event::assertListening(MessageSent::class, SendMessageNotification::class);
+        Event::assertListening(
+            MessageSent::class,
+            SendMessageNotification::class
+        );
     }
 
-    public function test_message_of_image_type_cannot_be_created_with_wrong_mime_type()
+    public function test_message_of_image_type_cannot_be_sent_with_wrong_mime_type()
     {
         Event::fake();
         Storage::fake();
@@ -83,16 +80,14 @@ class MessageManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => $file,
-                "type" => Message::IMAGE_TYPE,
+                "type" => "image",
+                "room" => "test_room",
             ]);
 
         $response2->assertUnprocessable();
-        $this->assertDatabaseMissing("messages", [
-            "type" => Message::IMAGE_TYPE,
-        ]);
     }
 
-    public function test_message_of_video_type_can_be_created()
+    public function test_message_of_video_type_can_be_sent()
     {
         Event::fake();
         Storage::fake();
@@ -106,21 +101,20 @@ class MessageManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => $file,
-                "type" => Message::VIDEO_TYPE,
+                "type" => "video",
+                "room" => "test_room",
             ]);
 
         $response2->assertNoContent();
-        $this->assertDatabaseHas("messages", [
-            "type" => Message::VIDEO_TYPE,
-        ]);
-
-        $message = Message::where("type", Message::VIDEO_TYPE)->first();
-        Storage::disk()->assertExists($message->content);
+        Storage::disk()->assertExists("public/videos/" . $file->hashName());
         Event::assertDispatched(MessageSent::class);
-        Event::assertListening(MessageSent::class, SendMessageNotification::class);
+        Event::assertListening(
+            MessageSent::class,
+            SendMessageNotification::class
+        );
     }
 
-    public function test_message_of_video_type_cannot_be_created_with_wrong_mime_type()
+    public function test_message_of_video_type_cannot_be_sent_with_wrong_mime_type()
     {
         Event::fake();
         Storage::fake();
@@ -134,27 +128,26 @@ class MessageManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => $file,
-                "type" => Message::VIDEO_TYPE,
+                "type" => "video",
+                "room" => "test_room",
             ]);
 
         $response2->assertUnprocessable();
-        $this->assertDatabaseMissing("messages", [
-            "type" => Message::VIDEO_TYPE,
-        ]);
     }
 
-    public function test_message_cannot_be_created_by_unauthenticated_user()
+    public function test_message_cannot_be_sent_by_unauthenticated_user()
     {
         Event::fake();
         $response = $this->post(route("messages.store"), [
             "content" => "test_content",
-            "type" => Message::TEXT_TYPE,
+            "type" => "text",
+            "room" => "test_room",
         ]);
 
         $response->assertUnauthorized();
     }
 
-    public function test_message_cannot_be_created_with_expired_session()
+    public function test_message_cannot_be_sent_with_expired_session()
     {
         Event::fake();
         $response1 = $this->post(route("users.select"), [
@@ -167,7 +160,8 @@ class MessageManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => "test_content",
-                "type" => Message::TEXT_TYPE,
+                "type" => "text",
+                "room" => "test_room",
             ]);
 
         $response2->assertUnauthorized();
@@ -175,7 +169,7 @@ class MessageManagementTest extends TestCase
         $this->assertDeleted($session);
     }
 
-    public function test_message_cannot_be_created_without_content()
+    public function test_message_cannot_be_sent_without_content()
     {
         Event::fake();
         $response1 = $this->post(route("users.select"), [
@@ -190,7 +184,7 @@ class MessageManagementTest extends TestCase
         $response2->assertInvalid("content");
     }
 
-    public function test_message_cannot_be_created_without_type()
+    public function test_message_cannot_be_sent_without_type()
     {
         Event::fake();
         $response1 = $this->post(route("users.select"), [
@@ -203,5 +197,20 @@ class MessageManagementTest extends TestCase
             ->post(route("messages.store"));
 
         $response2->assertInvalid("type");
+    }
+
+    public function test_message_can_be_sent_without_room()
+    {
+        Event::fake();
+        $response1 = $this->post(route("users.select"), [
+            "username" => "test_username",
+        ]);
+
+        $session = Session::where("username", "test_username")->first();
+        $response2 = $this
+            ->withCookie("session", $session->session_id)
+            ->post(route("messages.store"));
+
+        $response2->assertValid("room");
     }
 }

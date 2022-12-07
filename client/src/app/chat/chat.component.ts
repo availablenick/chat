@@ -82,7 +82,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const content = input.value;
     input.value = "";
     if (content !== "") {
-      this.messageHandler.sendMessage({ content, type: "0" }).subscribe();
+      this.messageHandler.sendMessage({ content, type: "text" }).subscribe();
     }
   }
 
@@ -96,9 +96,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     const formData: FormData = new FormData();
     formData.append("content", input.files[0]);
     if (input.files[0].type.startsWith("image/")) {
-      formData.append("type", "1");
+      formData.append("type", "image");
     } else if (input.files[0].type.startsWith("video/")) {
-      formData.append("type", "2");
+      formData.append("type", "video");
     } else {
       return;
     }

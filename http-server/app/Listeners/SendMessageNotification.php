@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\MessageSent;
-use App\Models\Message;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Queue\InteractsWithQueue;
@@ -28,29 +27,21 @@ class SendMessageNotification
      */
     public function handle(MessageSent $event)
     {
+        $data = [
+            "author" => $event->message->author,
+            "type" => $event->message->type,
+            "room" => $event->message->room,
+        ];
+
         switch ($event->message->type) {
-            case Message::TEXT_TYPE:
-                Http::post("http://ws-server:3000/messages", [
-                    "author" => $event->message->author,
-                    "content" => $event->message->content,
-                    "type" => "text",
-                ]);
+            case "text":
+                $data["content"] = $event->message->content;
+                Http::post("http://ws-server:3000/messages", $data);
                 break;
-            case Message::IMAGE_TYPE:
-                $content = str_replace("public/", "", $event->message->content);
-                Http::post("http://ws-server:3000/messages", [
-                    "author" => $event->message->author,
-                    "content" => asset("storage/" . $content),
-                    "type" => "image",
-                ]);
-                break;
-            case Message::VIDEO_TYPE:
-                $content = str_replace("public/", "", $event->message->content);
-                Http::post("http://ws-server:3000/messages", [
-                    "author" => $event->message->author,
-                    "content" => asset("storage/" . $content),
-                    "type" => "video",
-                ]);
+            case "image":
+            case "video":
+                $data["content"] = asset("storage/" . $event->message->content);
+                Http::post("http://ws-server:3000/messages", $data);
                 break;
         }
     }

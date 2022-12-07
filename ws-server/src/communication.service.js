@@ -16,12 +16,13 @@ class CommunicationService {
     this.io.close();
   }
 
-  sendMessageSentEvent(message) {
-    this.io.emit("message-sent", message);
-  }
+  sendMessage(message, room) {
+    if (room) {
+      this.io.to(room).emit("private-message-sent", message, room);  
+      return;
+    }
 
-  sendPrivateMessageSentEvent(message, room) {
-    this.io.to(room).emit("private-message-sent", message, room);
+    this.io.emit("message-sent", message);
   }
 
   setUpListeners(socket) {

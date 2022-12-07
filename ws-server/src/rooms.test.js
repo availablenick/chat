@@ -250,7 +250,7 @@ describe("private rooms", () => {
         };
   
         request(httpServer)
-          .post('/private-messages')
+          .post("/messages")
           .send(message)
           .expect(204)
           .end((err) => {
@@ -310,7 +310,7 @@ describe("private rooms", () => {
         };
   
         request(httpServer)
-          .post('/private-messages')
+          .post("/messages")
           .send(message)
           .expect(204)
           .end((err) => {
@@ -361,7 +361,7 @@ describe("private rooms", () => {
         };
   
         request(httpServer)
-          .post('/private-messages')
+          .post("/messages")
           .send(message)
           .expect(204)
           .end((err) => {
@@ -484,7 +484,7 @@ describe("private rooms", () => {
     };
 
     request(httpServer)
-      .post('/private-messages')
+      .post("/messages")
       .send(message)
       .expect(422)
       .end((err) => {

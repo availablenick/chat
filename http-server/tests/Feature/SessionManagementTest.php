@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Message;
 use App\Models\Session;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
@@ -130,7 +129,7 @@ class SessionManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => "test_content",
-                "type" => Message::TEXT_TYPE,
+                "type" => "text",
             ]);
 
         $this->travel((int) ceil(Session::LIFETIME/2))->minutes();
@@ -138,7 +137,7 @@ class SessionManagementTest extends TestCase
             ->withCookie("session", $session->session_id)
             ->post(route("messages.store"), [
                 "content" => "test_content",
-                "type" => Message::TEXT_TYPE,
+                "type" => "text",
             ]);
 
         $response3->assertNoContent();

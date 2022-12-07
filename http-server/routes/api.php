@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\PrivateMessageController;
 use App\Http\Controllers\SessionController;
 
 /*
@@ -25,8 +24,4 @@ Route::controller(SessionController::class)->group(function() {
 
 Route::controller(MessageController::class)->group(function() {
     Route::post("/v1/messages", "store")->name("messages.store");
-});
-
-Route::controller(PrivateMessageController::class)->group(function() {
-    Route::post("/v1/private-messages", "store")->name("private-messages.store");
 });

@@ -41,7 +41,7 @@ export class RoomComponent {
         room: this.room.id,
       };
 
-      this.messageHandler.sendPrivateMessage(data).subscribe();
+      this.messageHandler.sendMessage(data).subscribe();
     }
   }
 
@@ -64,6 +64,6 @@ export class RoomComponent {
     }
 
     input.value = "";
-    this.messageHandler.sendPrivateMessage(formData).subscribe();
+    this.messageHandler.sendMessage(formData).subscribe();
   }
 }

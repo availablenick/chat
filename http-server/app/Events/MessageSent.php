@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -18,7 +17,7 @@ class MessageSent
      *
      * @return void
      */
-    public function __construct(Message $message)
+    public function __construct($message)
     {
         $this->message = $message;
     }

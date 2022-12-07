@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Events\MessageSent;
-use App\Events\PrivateMessageSent;
 use App\Listeners\SendMessageNotification;
-use App\Listeners\SendPrivateMessageNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,9 +22,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         MessageSent::class => [
             SendMessageNotification::class,
-        ],
-        PrivateMessageSent::class => [
-            SendPrivateMessageNotification::class,
         ],
     ];
 
