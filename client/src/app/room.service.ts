@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { EventService } from "./event.service";
+import { CommunicationService } from "./communication.service";
 import { SessionService } from "./session.service";
 import { Message } from "./message";
 import { Room } from "./room";
@@ -12,17 +12,17 @@ export class RoomService {
 
   constructor(
     private session: SessionService,
-    private eventHandler: EventService,
+    private communicationHandler: CommunicationService,
   ) {
-    eventHandler.addListener("invite", (username: string, roomId: string) => {
+    communicationHandler.addListener("invite", (username: string, roomId: string) => {
       this.addRoom(roomId, username);
     });
 
-    eventHandler.addListener("private-message-sent", (message: Message, roomId: string) => {
+    communicationHandler.addListener("private-message-sent", (message: Message, roomId: string) => {
       this.addMessageToRoom(message, roomId);
     });
 
-    eventHandler.addListener("user-left-room", (_: string, roomId: string) => {
+    communicationHandler.addListener("user-left-room", (_: string, roomId: string) => {
       const message = {
         author: "",
         content: `${this.rooms[roomId].username} left`,
@@ -54,7 +54,7 @@ export class RoomService {
 
     const userIsInvitingThemself = username === this.session.getUser()!.username;
     if (!userIsInvitingThemself) {
-      this.eventHandler.sendInviteEvent(username, (roomId: string | null) => {
+      this.communicationHandler.sendInvitation(username, (roomId: string | null) => {
         if (roomId !== null) {
           this.addRoom(roomId, username);
         }
@@ -68,7 +68,7 @@ export class RoomService {
     }
 
     if (this.rooms[roomId].isActive) {
-      this.eventHandler.sendUserLeftRoomEvent(this.session.getUser()!.username, roomId);
+      this.communicationHandler.sendUserLeftRoomNotification(this.session.getUser()!.username, roomId);
     }
 
     delete this.rooms[roomId];

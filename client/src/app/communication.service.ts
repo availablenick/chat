@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 import { io, Socket } from "socket.io-client";
 import { Message } from "./message";
-import { User } from "./user";
 
 interface ListenersByEvent {
   [event: string]: Function[],
@@ -10,7 +11,7 @@ interface ListenersByEvent {
 @Injectable({
   providedIn: 'root'
 })
-export class EventService {
+export class CommunicationService {
   private socket: Socket;
   private listeners: ListenersByEvent = {
     "invite": [],
@@ -21,7 +22,7 @@ export class EventService {
     "user-left-room": [],
   };
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.socket = io("http://localhost:3000/");
     this.setUpListeners();
   }
@@ -48,23 +49,27 @@ export class EventService {
     })
   }
 
-  sendUserJoinedEvent(username: string, callback: Function): void {
+  sendUserJoinedNotification(username: string, callback: Function): void {
     this.socket.emit("user-joined", username, callback);
   }
 
-  sendInviteEvent(username: string, callback: Function): void {
-    this.socket.emit("invite", username, callback);
-  }
-
-  sendPrivateMessageSentEvent(message: Message, roomId: string): void {
-    this.socket.emit("private-message-sent", message, roomId);
-  }
-
-  sendUserLeftRoomEvent(username: string, roomId: string): void {
+  sendUserLeftRoomNotification(username: string, roomId: string): void {
     this.socket.emit("user-left-room", username, roomId);
   }
 
-  setUpListeners(): void {
+  sendInvitation(username: string, callback: Function): void {
+    this.socket.emit("invite", username, callback);
+  }
+
+  sendMessage(data: object): Observable<any> {
+    return this.http.post(
+      "http://localhost:5000/api/v1/messages",
+      data,
+      { withCredentials: true }
+    );
+  }
+
+  private setUpListeners(): void {
     this.socket.on("invite", (username: string, roomId: string) => {
       this.listeners["invite"].forEach((listener) => {
         listener(username, roomId);

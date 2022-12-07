@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { Room } from "../room";
-import { MessageService } from "../message.service";
-import { Message } from "../message";
+import { CommunicationService } from "../communication.service";
 
 @Component({
   selector: 'app-room',
@@ -23,7 +22,7 @@ export class RoomComponent {
     },
   };
 
-  constructor(private messageHandler: MessageService) { }
+  constructor(private communicationHandler: CommunicationService) { }
 
   hideRoom(): void {
     this.hideRoomEvent.emit();
@@ -41,7 +40,7 @@ export class RoomComponent {
         room: this.room.id,
       };
 
-      this.messageHandler.sendMessage(data).subscribe();
+      this.communicationHandler.sendMessage(data).subscribe();
     }
   }
 
@@ -64,6 +63,6 @@ export class RoomComponent {
     }
 
     input.value = "";
-    this.messageHandler.sendMessage(formData).subscribe();
+    this.communicationHandler.sendMessage(formData).subscribe();
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
-import { EventService } from "../event.service";
-import { MessageService } from "../message.service";
+import { CommunicationService } from "../communication.service";
 import { SessionService } from "../session.service";
 import { Message } from "../message";
 import { Room } from "../room";
@@ -29,28 +28,33 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private eventHandler: EventService,
-    private messageHandler: MessageService,
+    private communicationHandler: CommunicationService,
     private session: SessionService,
   ) { }
 
   ngOnInit(): void {
     if (this.session.hasUser()) {
       this.isLoading = false;
-      this.eventHandler.connect();
-      this.eventHandler.sendUserJoinedEvent(this.session.getUser()!.username, (usernames: string[]) => {
-        this.usernames = usernames;
-      });
+      this.communicationHandler.connect();
+      this.communicationHandler.sendUserJoinedNotification(
+        this.session.getUser()!.username,
+        (usernames: string[]) => {
+          this.usernames = usernames;
+        }
+      );
 
       this.setUpListeners();
     } else {
       this.session.requestData().subscribe({
         next: (response: any) => {
           this.session.setUser({ username: response.body.user.username });
-          this.eventHandler.connect();
-          this.eventHandler.sendUserJoinedEvent(response.body.user.username, (usernames: string[]) => {
-            this.usernames = usernames;
-          });
+          this.communicationHandler.connect();
+          this.communicationHandler.sendUserJoinedNotification(
+            response.body.user.username,
+            (usernames: string[]) => {
+              this.usernames = usernames;
+            }
+          );
 
           this.isLoading = false;
           this.setUpListeners();
@@ -63,7 +67,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventHandler.removeListeners();
+    this.communicationHandler.removeListeners();
   }
 
   showRoom(room: Room): void {
@@ -82,7 +86,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const content = input.value;
     input.value = "";
     if (content !== "") {
-      this.messageHandler.sendMessage({ content, type: "text" }).subscribe();
+      this.communicationHandler.sendMessage({ content, type: "text" }).subscribe();
     }
   }
 
@@ -104,15 +108,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     input.value = "";
-    this.messageHandler.sendMessage(formData).subscribe();
+    this.communicationHandler.sendMessage(formData).subscribe();
   }
 
   private setUpListeners(): void {
-    this.eventHandler.addListener("message-sent", (message: Message) => {
+    this.communicationHandler.addListener("message-sent", (message: Message) => {
       this.messages = [...this.messages, message];
     });
 
-    this.eventHandler.addListener("user-joined", (username: string) => {
+    this.communicationHandler.addListener("user-joined", (username: string) => {
       this.messages = [...this.messages, {
         author: "",
         content: `${username} joined the chat`,
@@ -120,7 +124,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       }];
     });
 
-    this.eventHandler.addListener("user-left", (username: string) => {
+    this.communicationHandler.addListener("user-left", (username: string) => {
       this.messages = [...this.messages, {
         author: "",
         content: `${username} left the chat`,

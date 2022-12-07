@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { SessionService } from '../session.service';
-import { EventService } from '../event.service';
+import { CommunicationService } from '../communication.service';
 import { RoomService } from '../room.service';
 import { User } from '../user';
 
@@ -22,16 +22,16 @@ export class SidebarComponent implements OnInit {
   constructor(
     private router: Router,
     private session: SessionService,
-    private eventHandler: EventService,
+    private communicationHandler: CommunicationService,
     private roomHandler: RoomService,
   ) { }
 
   ngOnInit(): void {
-    this.eventHandler.addListener("user-joined", (username: string) => {
+    this.communicationHandler.addListener("user-joined", (username: string) => {
       this.usernames.add(username);
     });
 
-    this.eventHandler.addListener("user-left", (username: string) => {
+    this.communicationHandler.addListener("user-left", (username: string) => {
       this.usernames.delete(username);
     });
   }
@@ -39,7 +39,7 @@ export class SidebarComponent implements OnInit {
   onClick(): void {
     this.session.clear().subscribe(() => {
       this.router.navigate(["/enter"]);
-      this.eventHandler.disconnect();
+      this.communicationHandler.disconnect();
     });
   }
 
