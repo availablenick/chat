@@ -39,7 +39,6 @@ export class SidebarComponent implements OnInit {
   onClick(): void {
     this.session.clear().subscribe(() => {
       this.router.navigate(["/enter"]);
-      this.communicationHandler.disconnect();
     });
   }
 

@@ -34,22 +34,20 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.session.hasUser()) {
-      this.isLoading = false;
-      this.communicationHandler.connect();
-      this.communicationHandler.sendUserJoinedNotification(
+      this.communicationHandler.connect(
         this.session.getUser()!.username,
         (usernames: string[]) => {
           this.usernames = usernames;
         }
       );
-
+      
+      this.isLoading = false;
       this.setUpListeners();
     } else {
       this.session.requestData().subscribe({
         next: (response: any) => {
           this.session.setUser({ username: response.body.user.username });
-          this.communicationHandler.connect();
-          this.communicationHandler.sendUserJoinedNotification(
+          this.communicationHandler.connect(
             response.body.user.username,
             (usernames: string[]) => {
               this.usernames = usernames;
@@ -67,7 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.communicationHandler.removeListeners();
+    this.communicationHandler.terminate();
   }
 
   showRoom(room: Room): void {

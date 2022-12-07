@@ -14,6 +14,7 @@ interface ListenersByEvent {
 export class CommunicationService {
   private socket: Socket;
   private listeners: ListenersByEvent = {
+    "connect": [],
     "invite": [],
     "message-sent": [],
     "private-message-sent": [],
@@ -23,20 +24,26 @@ export class CommunicationService {
   };
 
   constructor(private http: HttpClient) {
-    this.socket = io("http://localhost:3000/");
+    this.socket = io("http://localhost:3000/", { autoConnect: false });
     this.setUpListeners();
   }
 
-  connect(): void {
+  connect(username: string, callback: Function): void {
     if (this.socket.disconnected) {
+      this.socket.on("connect", () => {
+        this.socket.emit("user-joined", username, callback);
+      });
+
       this.socket.connect();
     }
   }
 
-  disconnect(): void {
+  terminate(): void {
     if (this.socket.connected) {
       this.socket.disconnect();
     }
+
+    this.removeListeners();
   }
 
   addListener(event: string, listener: Function): void {
@@ -47,10 +54,6 @@ export class CommunicationService {
     Object.keys(this.listeners).forEach((event) => {
       this.listeners[event].length = 0;
     })
-  }
-
-  sendUserJoinedNotification(username: string, callback: Function): void {
-    this.socket.emit("user-joined", username, callback);
   }
 
   sendUserLeftRoomNotification(username: string, roomId: string): void {
