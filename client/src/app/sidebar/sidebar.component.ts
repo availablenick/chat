@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { SessionService } from '../session.service';
 import { EventService } from '../event.service';
@@ -11,6 +11,12 @@ import { User } from '../user';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+  @Input() set initialUsernames(initialUsernames: string[]) {
+    initialUsernames.forEach((username) => {
+      this.usernames.add(username);
+    });
+  }
+
   usernames: Set<string> = new Set();
 
   constructor(
@@ -27,10 +33,6 @@ export class SidebarComponent implements OnInit {
 
     this.eventHandler.addListener("user-left", (username: string) => {
       this.usernames.delete(username);
-    });
-
-    this.session.requestAll().subscribe((response: any) => {
-      response.body.data.forEach((user: any) => { this.usernames.add(user.username) });
     });
   }
 

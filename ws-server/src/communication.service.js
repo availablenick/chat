@@ -25,7 +25,11 @@ class CommunicationService {
   }
 
   setUpListeners(socket) {
-    socket.on("user-joined", (username) => {
+    socket.on("user-joined", (username, callback) => {
+      if (callback) {
+        callback(this.userHandler.getUsernames());
+      }
+
       this.userHandler.assignUsernameToId(username, socket.id);
       socket.broadcast.emit("user-joined", username);
     });

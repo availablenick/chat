@@ -28,6 +28,10 @@ class UserService {
     this.roomByUserPair[`${username1}:${username2}`] = id;
     return id;
   }
+
+  getUsernames() {
+    return Object.keys(this.idByUsername);
+  }
   
   getUsernameFrom(id) {
     return this.usernameById[id];

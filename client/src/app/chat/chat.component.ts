@@ -5,7 +5,6 @@ import { MessageService } from "../message.service";
 import { SessionService } from "../session.service";
 import { Message } from "../message";
 import { Room } from "../room";
-import { User } from "../user";
 
 @Component({
   selector: 'app-chat',
@@ -17,6 +16,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   roomIsVisible: boolean = false;
   selectedRoom: Room | null = null;
   messages: Message[] = [];
+  usernames: string[] = [];
   styles: any = {
     message: {
       padding: "0.1rem 0.25rem",
@@ -38,14 +38,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.session.hasUser()) {
       this.isLoading = false;
       this.eventHandler.connect();
-      this.eventHandler.sendUserJoinedEvent(this.session.getUser()!.username);
+      this.eventHandler.sendUserJoinedEvent(this.session.getUser()!.username, (usernames: string[]) => {
+        this.usernames = usernames;
+      });
+
       this.setUpListeners();
     } else {
       this.session.requestData().subscribe({
         next: (response: any) => {
           this.session.setUser({ username: response.body.user.username });
           this.eventHandler.connect();
-          this.eventHandler.sendUserJoinedEvent(response.body.user.username);
+          this.eventHandler.sendUserJoinedEvent(response.body.user.username, (usernames: string[]) => {
+            this.usernames = usernames;
+          });
+
           this.isLoading = false;
           this.setUpListeners();
         },

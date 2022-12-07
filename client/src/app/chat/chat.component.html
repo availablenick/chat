@@ -35,7 +35,7 @@
       </div>
     </div>
   
-    <app-sidebar></app-sidebar>
+    <app-sidebar [initialUsernames]="usernames"></app-sidebar>
     <app-room
       *ngIf="roomIsVisible"
       [room]="selectedRoom!"

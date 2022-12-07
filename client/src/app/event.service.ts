@@ -48,8 +48,8 @@ export class EventService {
     })
   }
 
-  sendUserJoinedEvent(username: string): void {
-    this.socket.emit("user-joined", username);
+  sendUserJoinedEvent(username: string, callback: Function): void {
+    this.socket.emit("user-joined", username, callback);
   }
 
   sendInviteEvent(username: string, callback: Function): void {

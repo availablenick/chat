@@ -53,6 +53,26 @@ describe("global chat", () => {
     });
   });
 
+  test("users receive list of connected users when they join the chat", (done) => {
+    const port = httpServer.address().port;
+    const socket1 = Client(`http://localhost:${port}/`);
+    const socket2 = Client(`http://localhost:${port}/`);
+    sockets.push(socket1, socket2);
+
+    socket1.once("connect", () => {
+      socket1.emit("user-joined", "test_username1");
+    });
+
+    socket2.once("connect", () => {
+      socket2.once("user-joined", () => {
+        socket2.emit("user-joined", "test_username2", (usernames) => {
+          expect(usernames).toContain("test_username1");
+          done();
+        });
+      });
+    });
+  });
+
   test("users are notified when someone disconnects", (done) => {
     const port = httpServer.address().port;
     const socket1 = Client(`http://localhost:${port}/`);
