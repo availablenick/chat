@@ -8,6 +8,7 @@
         (click)="showRoom(room.id)"
       >
         {{ room.username }}
+        <span *ngIf="!room.isActive">(inactive)</span>
       </button>
       <button style="margin-left: 0.5rem" type="button" (click)="leaveRoom(room.id)">
         &times;
