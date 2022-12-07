@@ -13,8 +13,9 @@ interface ListenersByEvent {
 })
 export class CommunicationService {
   private socket: Socket;
+  private username: string = "";
+  private connectionCallback: Function = () => {};
   private listeners: ListenersByEvent = {
-    "connect": [],
     "invite": [],
     "message-sent": [],
     "private-message-sent": [],
@@ -30,10 +31,8 @@ export class CommunicationService {
 
   connect(username: string, callback: Function): void {
     if (this.socket.disconnected) {
-      this.socket.on("connect", () => {
-        this.socket.emit("user-joined", username, callback);
-      });
-
+      this.username = username;
+      this.connectionCallback = callback;
       this.socket.connect();
     }
   }
@@ -73,6 +72,10 @@ export class CommunicationService {
   }
 
   private setUpListeners(): void {
+    this.socket.on("connect", () => {
+      this.socket.emit("user-joined", this.username, this.connectionCallback);
+    });
+
     this.socket.on("invite", (username: string, roomId: string) => {
       this.listeners["invite"].forEach((listener) => {
         listener(username, roomId);
